@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:padding="3dp" />
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:textColor="@color/appNameText"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="10sp"
+            app:autoSizeMaxTextSize="15sp"
+            app:autoSizeStepGranularity="2sp"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/app_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:padding="5dp"
+            android:textColor="@color/notificationText"
+            android:gravity="center_vertical"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/app_command"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:textColor="@color/appNumText"
+            android:padding="5dp"
+            android:gravity="center_vertical|right"
+            android:maxLines="1" />
+
+    </LinearLayout>
+
+</LinearLayout>

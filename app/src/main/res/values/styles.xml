@@ -1,0 +1,17 @@
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+    <!-- Base application theme. -->
+    <!-- activity_fullscreen -->
+    <style name="activity_fullscreen" parent="AppTheme">
+        <item name="android:background">@drawable/background</item>
+    </style>
+
+    <style name="activity_fullscreen_somethings" parent="AppTheme">
+        <item name="android:textColor">@color/fullactivityText</item>
+        <item name="android:textColorHint">@color/fullactivityTextHint</item>
+    </style>
+
+    <style name="activity_fullscreen_button" parent="AppTheme">
+        <item name="android:background">@drawable/button_layout</item>
+    </style>
+</resources>

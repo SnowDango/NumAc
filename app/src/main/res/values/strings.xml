@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NumAc</string>
+
+    <string name="please_push_number">Please push number</string>
+    <string name="wait_text">Please Wait. Now AppList Loading.</string>
+    <string name="hint">Please enter the name you want to search</string>
+</resources>

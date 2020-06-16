@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- DayLight Color-->
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#f4f500</color>
+
+    <!-- FullscreenActivity Color-->
+    <color name="fullactivityHomeColor">#5AD2F6</color>
+    <color name="fullactivityButtonSolid">#11090340</color>
+    <color name="fullactivityButtonStroke">#00000000</color>
+    <color name="fullactivityText">#090340</color>
+    <color name="fullactivityTextHint">#AA090340</color>
+
+    <!--AppListViewActivity Color-->
+    <color name="searchAppBarText">#000000</color>
+    <color name="notificationText">#FF0000</color>
+
+    <!-- AppListViewActivity & CommandReplaceActivity Color-->
+    <color name="appNameText">#000000</color>
+    <color name="appNumText">#000000</color>
+
+    <!-- CommandReplaceActivity Color-->
+    <color name="replaceButtonBackground">#ffffff</color>
+    <color name="replaceButtonText">#000000</color>
+
+
+</resources>
