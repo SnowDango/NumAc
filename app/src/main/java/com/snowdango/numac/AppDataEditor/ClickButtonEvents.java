@@ -47,8 +47,8 @@ public class ClickButtonEvents {
         if (newCommand.length() != 4) {
             matchNumber = false;
             AlertCreate("Error code3-2", "This command doesn't follow the format.\n" +
-                            "You should choose 4 numbers.",
-                    "OK", null, null, null);
+                                    "You should choose 4 numbers.",
+                            "OK", null, null, null);
         }
         for (int i = 0; i < newCommand.length(); i++) {
             if (Character.isDigit(newCommand.charAt(i))) {

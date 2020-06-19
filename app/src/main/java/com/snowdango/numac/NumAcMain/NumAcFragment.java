@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.snowdango.numac.ListFormat.SharpCommandListFormat;
@@ -144,7 +145,7 @@ public class NumAcFragment extends Fragment implements View.OnClickListener {
                 if(intent != null) {
                     startActivity(intent);
                 }else {
-                    textView.setText("Undefined Application");
+                    textView.setText(R.string.undefined_app);
                 }
                 upHandler = new Handler();
                 upHandler.postDelayed(updateText, updateLateTime);

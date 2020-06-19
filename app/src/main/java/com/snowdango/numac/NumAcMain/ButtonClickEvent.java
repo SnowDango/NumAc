@@ -12,7 +12,7 @@ public class ButtonClickEvent {
 
     private Handler handler = new Handler();
 
-    public Intent onClickEvents(final TextView textView){
+    public Intent onClickEvents(final TextView textView) {
         Intent intent = null;
 
         Runnable updateText = new Runnable() {
@@ -25,22 +25,26 @@ public class ButtonClickEvent {
 
         String command = (String) textView.getText();
 
-        if(command.length() == 4) {
-            try {
-                textView.setText("Load");
-                textPut = false;
-                String[] info = dataBaseHelper.getPackageAndClass(dataBaseHelper, command);
+        try {
+            textView.setText("Load");
+            textPut = false;
+            String[] info = dataBaseHelper.getPackageAndClass(dataBaseHelper, command);
+
+            if (info[0] == null) {
                 intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setClassName(info[0],info[1]);
-            } catch (Exception e) {
-                Log.d("command", command);
-                textView.setText("Error");
-                textPut = false;
-                handler=new Handler();
-                handler.postDelayed(updateText,1000);
+                intent.setClassName(info[0], info[1]);
+            } else {
+                intent = null;
             }
+        } catch (Exception e) {
+            Log.d("command", command);
+            textView.setText("Error");
+            textPut = false;
+            handler = new Handler();
+            handler.postDelayed(updateText, 1000);
+        } finally {
+            return intent;
         }
-        return intent;
     }
 }

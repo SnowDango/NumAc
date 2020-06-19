@@ -24,7 +24,6 @@ import com.snowdango.numac.DBControl.FirstLoadAppDb;
 import com.snowdango.numac.ListFormat.AppListFormat;
 import com.snowdango.numac.ListFormat.SharpCommandListFormat;
 import com.snowdango.numac.R;
-import com.snowdango.numac.DBControl.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
