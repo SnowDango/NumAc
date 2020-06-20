@@ -184,7 +184,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void updateColor(DataBaseHelper dataBaseHelper,String color){
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
 
-        db.execSQL("update "+TABLE_NAME2+" set "+COLUMN_NAME_TITLE5+" = ? where "+_ID+" = ?",new String[]{ color, String.valueOf(1)});
+        db.execSQL("update "+TABLE_NAME2+" set "+COLUMN_NAME_TITLE5+" = ? where "+_ID+" = 1",new String[]{color});
     }
 
     public String getThemeColor(DataBaseHelper dataBaseHelper){
@@ -193,6 +193,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select "+COLUMN_NAME_TITLE5+" from "+TABLE_NAME2,new String[]{});
 
         cursor.moveToFirst();
+
+        Log.d("theme",cursor.getString(0));
         return cursor.getString(0);
     }
 

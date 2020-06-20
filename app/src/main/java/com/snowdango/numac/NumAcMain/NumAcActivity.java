@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -56,18 +57,6 @@ public class NumAcActivity extends AppCompatActivity {
             display.getMetrics(metrics);
         }
 
-        try {
-            if (!AppLaunchChecker.hasStartedFromLauncher(this))
-                modeThemeNight = dataBaseHelper.getThemeColor(dataBaseHelper);
-        }catch (Exception e){
-
-        }
-        if(modeThemeNight.equals("dark")){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }else{
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-
         setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT);
         setSharpCommandList();
         setContentView(R.layout.activity_fullscreen);
@@ -78,6 +67,26 @@ public class NumAcActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        if (AppLaunchChecker.hasStartedFromLauncher(this)) {
+            modeThemeNight = dataBaseHelper.getThemeColor(dataBaseHelper);
+            Log.d("mode", modeThemeNight);
+        }
+
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_UNSPECIFIED) {
+            if (modeThemeNight.equals("dark") && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                recreate();
+            } else if (modeThemeNight.equals("daylight") && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                recreate();
+            }
+        }else {
+            if(modeThemeNight.equals("dark")){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }else if(modeThemeNight.equals("daylight")){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        }
         loadAppList();
     }
 
@@ -105,12 +114,14 @@ public class NumAcActivity extends AppCompatActivity {
                         () ->  {
                             if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                                dataBaseHelper.updateColor(dataBaseHelper,"dark");
-                                modeThemeNight = "dark";
+                                dataBaseHelper.updateColor(dataBaseHelper,"daylight");
+                                Log.d("theme" , " daylight");
+                                modeThemeNight = "daylight";
                             }else {
                                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                                dataBaseHelper.updateColor(dataBaseHelper,"daylight");
-                                modeThemeNight = "daylight";
+                                dataBaseHelper.updateColor(dataBaseHelper,"dark");
+                                Log.d("theme" , " dark ");
+                                modeThemeNight = "dark";
                             }
                             recreate();
                         },500,1500),
