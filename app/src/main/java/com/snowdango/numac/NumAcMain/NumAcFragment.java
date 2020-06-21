@@ -120,6 +120,7 @@ public class NumAcFragment extends Fragment implements View.OnClickListener {
         int updateLateTime = 1000;
 
         if (textView.getText().length() == 4) {
+            String command = (String) textView.getText();
             for (SharpCommandListFormat s : sharpCommandList) {
                 if (s.getCommand().equals(textView.getText())) {
                     textView.setText(s.getText());
@@ -142,9 +143,9 @@ public class NumAcFragment extends Fragment implements View.OnClickListener {
             if (handler == null) {
                 ButtonClickEvent buttonClickEvent = new ButtonClickEvent();
                 Intent intent = buttonClickEvent.onClickEvents(textView);
-                if(intent != null) {
+                if (intent != null) {
                     startActivity(intent);
-                }else {
+                } else {
                     textView.setText(R.string.undefined_app);
                 }
                 upHandler = new Handler();

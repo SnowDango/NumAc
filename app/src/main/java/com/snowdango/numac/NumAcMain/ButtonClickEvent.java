@@ -30,7 +30,7 @@ public class ButtonClickEvent {
             textPut = false;
             String[] info = dataBaseHelper.getPackageAndClass(dataBaseHelper, command);
 
-            if (info[0] == null) {
+            if (info[0] != null) {
                 intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setClassName(info[0], info[1]);
