@@ -34,13 +34,13 @@ public class ButtonClickEvent {
                 intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setClassName(info[0], info[1]);
-            } else {
-                intent = null;
             }
+
         } catch (Exception e) {
             Log.d("command", command);
             textView.setText("Error");
             textPut = false;
+            intent = null;
             handler = new Handler();
             handler.postDelayed(updateText, 1000);
         } finally {
