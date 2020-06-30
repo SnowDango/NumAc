@@ -120,6 +120,8 @@ public class NumAcFragment extends Fragment implements View.OnClickListener {
         int updateLateTime = 1000;
 
         if (textView.getText().length() == 4) {
+            handler = null;
+            upHandler = null;
             String command = (String) textView.getText();
             for (SharpCommandListFormat s : sharpCommandList) {
                 if (s.getCommand().equals(command)) {
