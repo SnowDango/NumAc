@@ -25,7 +25,7 @@ view create and pushed button click event.
 
 class AppDataEditorFragment : Fragment(), View.OnClickListener {
     private lateinit var buttons: Array<Button>
-    lateinit var appNameView: TextView
+    private lateinit var appNameView: TextView
     private lateinit var appCommand: EditText
     var appName = "Error"
     var oldCommand = "0000"
