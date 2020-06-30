@@ -1,4 +1,4 @@
-package com.snowdango.numac.model
+package com.snowdango.numac.models
 
 import android.content.ContentValues
 import android.content.Context

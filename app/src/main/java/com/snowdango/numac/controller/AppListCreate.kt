@@ -2,7 +2,7 @@ package com.snowdango.numac.controller
 
 import android.content.Context
 import android.content.Intent
-import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.models.AppListFormat
 import java.util.*
 
 /*

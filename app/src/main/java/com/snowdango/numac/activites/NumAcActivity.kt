@@ -18,10 +18,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.AppLaunchChecker
-import com.snowdango.numac.model.DataBaseHelper
+import com.snowdango.numac.models.DataBaseHelper
 import com.snowdango.numac.controller.FirstLoadAppDb
-import com.snowdango.numac.model.AppListFormat
-import com.snowdango.numac.model.SharpCommandListFormat
+import com.snowdango.numac.models.AppListFormat
+import com.snowdango.numac.models.SharpCommandListFormat
 import com.snowdango.numac.fragments.NumAcFragment
 import com.snowdango.numac.R
 import com.snowdango.numac.fragments.WaitTimeFragment

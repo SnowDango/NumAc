@@ -1,8 +1,8 @@
 package com.snowdango.numac.controller
 
 import android.content.Context
-import com.snowdango.numac.model.DataBaseHelper
-import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.models.DataBaseHelper
+import com.snowdango.numac.models.AppListFormat
 import com.snowdango.numac.activites.NumAcActivity
 import java.util.*
 

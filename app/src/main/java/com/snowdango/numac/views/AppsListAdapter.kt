@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
-import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.models.AppListFormat
 import com.snowdango.numac.activites.NumAcActivity
 import com.snowdango.numac.R
 import java.util.*

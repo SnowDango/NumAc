@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import com.snowdango.numac.activites.AppDataEditorActivity
 import com.snowdango.numac.views.AppsListAdapter
 import com.snowdango.numac.controller.FirstLoadAppDb
-import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.models.AppListFormat
 import com.snowdango.numac.activites.NumAcActivity
 import com.snowdango.numac.R
 
