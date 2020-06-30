@@ -54,14 +54,15 @@ class WaitTimeFragment : Fragment() {
         AppLaunchChecker.onActivityCreate(activity!!)
     }
 
-    fun changeFragment() {
+    private fun changeFragment() {
         val activity: Activity? = activity
         if (activity != null) {
+            Log.d("localName", activity.localClassName )
             val fragmentTransaction = fragmentManager!!.beginTransaction()
             fragmentTransaction.addToBackStack(null)
-            if (activity.localClassName == "NumAcMain.NumAcActivity") {
+            if (activity.localClassName == "activites.NumAcActivity") {
                 fragmentTransaction.replace(R.id.fragment_main, NumAcFragment())
-            } else if (activity.localClassName == "AppListView.AppListActivity") {
+            } else if (activity.localClassName == "activites.AppListActivity") {
                 fragmentTransaction.replace(R.id.fragment_main, AppListViewFragment())
             }
             fragmentTransaction.commitAllowingStateLoss()
