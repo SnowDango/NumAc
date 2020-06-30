@@ -1,0 +1,103 @@
+package com.snowdango.numac.AppDataEditor
+
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
+import com.snowdango.numac.DBControl.FirstLoadAppDb
+import com.snowdango.numac.NumAcMain.NumAcActivity
+
+class ClickButtonEvents {
+    fun uninstallApp(oldCommand: String?): Intent? {
+        var intent: Intent? = null
+        try {
+            val info = NumAcActivity.dataBaseHelper!!.getPackageAndClass(NumAcActivity.dataBaseHelper!!, oldCommand!!)
+            intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, Uri.fromParts("package", info[0], null))
+        } catch (e: Exception) {
+            val clickButtonEvents = ClickButtonEvents()
+            clickButtonEvents.AlertCreate("Error", "can\'t uninstall app",
+                    "OK", null, null, null)
+        } finally {
+            return intent
+        }
+    }
+
+    fun deleteApp(appId: Int, appName: String?, context: Context?): Boolean { //delete app for list
+        var errorChecker = true
+        try {
+            NumAcActivity.dataBaseHelper!!.deleteApp(NumAcActivity.dataBaseHelper!!, appName!!)
+            NumAcActivity.list!!.removeAt(appId)
+            val firstLoadAppDb = FirstLoadAppDb()
+            firstLoadAppDb.updateDbList(NumAcActivity.dataBaseHelper!!, context)
+        } catch (e: Exception) {
+            errorChecker = false
+        } finally {
+            return errorChecker
+        }
+    }
+
+    fun checkCommandFormat(newCommand: String): Boolean {
+        var matchNumber = true
+        if (newCommand.length != 4) {
+            matchNumber = false
+            AlertCreate("Error code3-2", """
+     This command doesn't follow the format.
+     You should choose 4 numbers.
+     """.trimIndent(),
+                    "OK", null, null, null)
+        }
+        for (element in newCommand) {
+            if (Character.isDigit(element)) {
+                continue
+            } else {
+                matchNumber = false
+                AlertCreate("Error 3-3", """
+     This command doesn't follow the format.
+     You should choose 4 numbers.
+     """.trimIndent(),
+                        "OK", null, null, null)
+                break
+            }
+        }
+        return matchNumber
+    }
+
+    fun checkNewCommandForList(newCommand: String): Boolean {
+        var checkCommandExist = true
+        for (a in NumAcActivity.list!!) {
+            if (a.appCommand == newCommand) {
+                AlertCreate("Error code 3-4", """This command already exist in list.Please choose deference 4 numbers.""".trimIndent(),
+                        "OK", null, null, null)
+                checkCommandExist = false
+                break
+            }
+        }
+        return checkCommandExist
+    }
+
+    fun changeAppCommand(appPosition: Int, appName: String?, newCommand: String?): Boolean {
+        var errorChecker = true
+        try {
+            NumAcActivity.list!![appPosition].appCommand = newCommand
+            NumAcActivity.dataBaseHelper!!.updateCommandWhereName(NumAcActivity.dataBaseHelper!!, appName!!, newCommand!!)
+        } catch (e: Exception) {
+            AlertCreate("Error code 3-5", """Sorry, I missed change command.Couldn't change this app's command.""".trimIndent(),
+                    "OK", null, null, null)
+            errorChecker = false
+        } finally {
+            return errorChecker
+        }
+    }
+
+    fun AlertCreate(title: String?, message: String?, positive: String?, positiveListener: DialogInterface.OnClickListener?,
+                    negative: String?, negativeListener: DialogInterface.OnClickListener?) {
+        try {
+            NumAcActivity.builder!!.setTitle(title)
+            NumAcActivity.builder!!.setMessage(message)
+            NumAcActivity.builder!!.setPositiveButton(positive, positiveListener)
+            NumAcActivity.builder!!.setNegativeButton(negative, negativeListener)
+            NumAcActivity.builder!!.show()
+        }catch ( e: Exception ){
+        }
+    }
+}
