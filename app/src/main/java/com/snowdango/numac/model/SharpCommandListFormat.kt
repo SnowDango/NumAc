@@ -1,4 +1,9 @@
-package com.snowdango.numac.ListFormat
+package com.snowdango.numac.model
+
+
+/*
+This class is sharp command list format.
+ */
 
 class SharpCommandListFormat(
         var command: String,

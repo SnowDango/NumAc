@@ -1,10 +1,17 @@
-package com.snowdango.numac.DBControl
+package com.snowdango.numac.controller
 
 import android.content.Context
-import com.snowdango.numac.AppListView.AppListCreate
-import com.snowdango.numac.ListFormat.AppListFormat
-import com.snowdango.numac.NumAcMain.NumAcActivity
+import com.snowdango.numac.model.DataBaseHelper
+import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.activites.NumAcActivity
 import java.util.*
+
+/*
+this class can organize app list .
+First launch : listen app list create and set view mode "daylight".
+over Second lunch : listen app list create.
+If command exist this app , replace new list in command.
+ */
 
 class FirstLoadAppDb {
     fun firstCreateDb(dataBaseHelper: DataBaseHelper, context: Context?) {

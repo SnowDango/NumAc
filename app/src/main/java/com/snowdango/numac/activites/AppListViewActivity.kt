@@ -1,4 +1,7 @@
-package com.snowdango.numac.AppListView
+/*
+ * Copyright (C) 2019-2020 snowdango
+ */
+package com.snowdango.numac.activites
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,9 +12,16 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.snowdango.numac.NumAcMain.NumAcActivity
-import com.snowdango.numac.NumAcMain.WaitTimeFragment
+import com.snowdango.numac.fragments.WaitTimeFragment
 import com.snowdango.numac.R
+import com.snowdango.numac.fragments.AppListViewFragment
+
+/*
+This class is second listen activity.
+pushed HomeKey or BackKey , launch Main Activity.
+If Main Activity's companion app list is null , begin WaitTimeFragment to load app list.
+default begin AppListViewFragment.
+ */
 
 class AppListViewActivity : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")

@@ -1,9 +1,17 @@
-package com.snowdango.numac.AppListView
+package com.snowdango.numac.controller
 
 import android.content.Context
 import android.content.Intent
-import com.snowdango.numac.ListFormat.AppListFormat
+import com.snowdango.numac.model.AppListFormat
 import java.util.*
+
+/*
+When First Lunch this application and update app list, listened this class.
+return ArrayList -> format : AppListFormat.
+Launchable application set ArrayList
+ Icon, Name, packageName, className and
+ command( when first launch, put random four number)
+ */
 
 class AppListCreate {
     fun appRead(context: Context): List<AppListFormat> {

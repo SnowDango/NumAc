@@ -1,4 +1,8 @@
-package com.snowdango.numac.NumAcMain
+/*
+ * Copyright (C) 2019-2020 snowdango
+ */
+
+package com.snowdango.numac.activites
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -14,14 +18,26 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.AppLaunchChecker
-import com.snowdango.numac.AppListView.AppListViewActivity
-import com.snowdango.numac.DBControl.DataBaseHelper
-import com.snowdango.numac.DBControl.FirstLoadAppDb
-import com.snowdango.numac.ListFormat.AppListFormat
-import com.snowdango.numac.ListFormat.SharpCommandListFormat
+import com.snowdango.numac.model.DataBaseHelper
+import com.snowdango.numac.controller.FirstLoadAppDb
+import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.model.SharpCommandListFormat
+import com.snowdango.numac.fragments.NumAcFragment
 import com.snowdango.numac.R
+import com.snowdango.numac.fragments.WaitTimeFragment
 import java.lang.Exception
 import java.util.*
+
+
+/*
+  This class is NumAc application's main activity.
+  When First Launch , create application list and daylight view .
+  Second launch , reading database for create app list.
+  Set sharp list command runnable .
+  If pushed HomeKey when other app , launch this app.
+  Begin fragment. need to loading app : WaitTimeFragment.
+                  else : NumAcFragment.
+*/
 
 class NumAcActivity : AppCompatActivity() {
 
@@ -96,8 +112,8 @@ class NumAcActivity : AppCompatActivity() {
         if (mHomeKeyReceiver!!.debugUnregister) registerReceiver(mHomeKeyReceiver, filter)
     }
 
-    fun setSharpCommandList() {
-        sharpCommandList = ArrayList(Arrays.asList(
+    private fun setSharpCommandList() {
+        sharpCommandList = ArrayList(listOf(
                 SharpCommandListFormat(
                         "####", "Change Mode",
                         Runnable {
@@ -113,9 +129,9 @@ class NumAcActivity : AppCompatActivity() {
                                     Log.d("theme", " dark ")
                                     "dark"
                                 }
-                            }catch (e :Exception){
+                            } catch (e: Exception) {
                                 modeThemeNight = "daylight"
-                            }finally {
+                            } finally {
                                 recreate()
                             }
                         }, 500, 1500),
@@ -140,7 +156,7 @@ class NumAcActivity : AppCompatActivity() {
         firstLoadAppDb.updateDbList(dataBaseHelper!!, this)
     }
 
-    fun loadAppList() {
+    private fun loadAppList() {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.addToBackStack(null)

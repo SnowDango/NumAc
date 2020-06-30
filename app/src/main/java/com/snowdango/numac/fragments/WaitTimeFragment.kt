@@ -1,4 +1,4 @@
-package com.snowdango.numac.NumAcMain
+package com.snowdango.numac.fragments
 
 import android.app.Activity
 import android.os.Bundle
@@ -9,9 +9,15 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.app.AppLaunchChecker
 import androidx.fragment.app.Fragment
-import com.snowdango.numac.AppListView.AppListViewFragment
-import com.snowdango.numac.DBControl.FirstLoadAppDb
+import com.snowdango.numac.controller.FirstLoadAppDb
 import com.snowdango.numac.R
+import com.snowdango.numac.activites.NumAcActivity
+
+/*
+This fragment listen by Main and AppListViewActivity.
+can load app list.
+create wait view when load app list.
+ */
 
 class WaitTimeFragment : Fragment() {
     private var progressBar: ProgressBar? = null

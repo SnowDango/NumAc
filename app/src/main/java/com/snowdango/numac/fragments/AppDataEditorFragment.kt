@@ -1,6 +1,6 @@
 @file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 
-package com.snowdango.numac.AppDataEditor
+package com.snowdango.numac.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -13,8 +13,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.snowdango.numac.NumAcMain.NumAcActivity
+import com.snowdango.numac.activites.AppDataEditorActivity
+import com.snowdango.numac.activites.NumAcActivity
 import com.snowdango.numac.R
+import com.snowdango.numac.controller.ClickButtonEvents
+
+/*
+This fragment listen by AppDataEditorActivity.
+view create and pushed button click event.
+ */
 
 class AppDataEditorFragment : Fragment(), View.OnClickListener {
     private lateinit var buttons: Array<Button>

@@ -1,6 +1,10 @@
-package com.snowdango.numac.ListFormat
+package com.snowdango.numac.model
 
 import android.graphics.drawable.Drawable
+
+/*
+this class app list format.
+ */
 
 class AppListFormat {
     var id: Long = 0

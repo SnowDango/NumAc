@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.snowdango.numac.NumAcMain.NumAcActivity"
+            android:name="com.snowdango.numac.activites.NumAcActivity"
             android:excludeFromRecents="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name">
@@ -26,14 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.snowdango.numac.AppListView.AppListViewActivity"
+        <activity android:name="com.snowdango.numac.activites.AppListViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name="com.snowdango.numac.AppDataEditor.AppDataEditorActivity">
+        <activity android:name="com.snowdango.numac.activites.AppDataEditorActivity">
 
         </activity>
 

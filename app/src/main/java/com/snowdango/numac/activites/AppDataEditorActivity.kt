@@ -1,4 +1,4 @@
-package com.snowdango.numac.AppDataEditor
+package com.snowdango.numac.activites
 
 import android.content.Context
 import android.content.Intent
@@ -8,9 +8,14 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.snowdango.numac.AppListView.AppListViewActivity
-import com.snowdango.numac.NumAcMain.NumAcActivity
 import com.snowdango.numac.R
+
+/*
+This class is third listen activity .
+pressed BackKey , launch AppListViewActivity.
+pressed HomeKey , launch NumAcActivity .
+begin AppDataEditorFragment.
+ */
 
 class AppDataEditorActivity : AppCompatActivity() {
 

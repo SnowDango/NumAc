@@ -1,8 +1,13 @@
-package com.snowdango.numac.NumAcMain
+package com.snowdango.numac.controller
 
 import android.util.Log
 import android.widget.TextView
 import com.snowdango.numac.R
+
+/*
+Main Activity pushed button ,listen this class.
+this class can textView's text.
+ */
 
 class ClickTextChanger {
     fun clickEvents(button: Int, b: Boolean, textView: TextView) {

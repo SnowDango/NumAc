@@ -1,4 +1,4 @@
-package com.snowdango.numac.AppListView
+package com.snowdango.numac.views
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,10 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
-import com.snowdango.numac.ListFormat.AppListFormat
-import com.snowdango.numac.NumAcMain.NumAcActivity
+import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.activites.NumAcActivity
 import com.snowdango.numac.R
 import java.util.*
+
+/*
+This class listen AppListViewFragment.
+can create custom list.
+ */
 
 class AppsListAdapter(private val context: Context) : BaseAdapter(), Filterable {
     private var layoutInflater: LayoutInflater? = null

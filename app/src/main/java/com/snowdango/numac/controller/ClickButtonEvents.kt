@@ -1,11 +1,17 @@
-package com.snowdango.numac.AppDataEditor
+package com.snowdango.numac.controller
 
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
-import com.snowdango.numac.DBControl.FirstLoadAppDb
-import com.snowdango.numac.NumAcMain.NumAcActivity
+import com.snowdango.numac.activites.NumAcActivity
+
+/*
+This class listen by AppDataEditorFragment.
+can uninstall app and replace command old command to new command.
+When uninstall app , this app is delete by app list.
+can check new command before replace command throw Error by Alert.
+ */
 
 class ClickButtonEvents {
     fun uninstallApp(oldCommand: String?): Intent? {

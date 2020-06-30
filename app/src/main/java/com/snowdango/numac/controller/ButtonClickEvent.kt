@@ -1,9 +1,18 @@
-package com.snowdango.numac.NumAcMain
+package com.snowdango.numac.controller
 
 import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import android.widget.TextView
+import com.snowdango.numac.activites.NumAcActivity
+import com.snowdango.numac.fragments.NumAcFragment
+
+/*
+If NumAcActivity's TextView length == 4, this class listen.
+received textView , and read database get packageName and className.
+Set packageName and className to intent.
+return intent.
+ */
 
 class ButtonClickEvent {
     private var handler = Handler()

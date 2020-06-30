@@ -1,12 +1,13 @@
-package com.snowdango.numac.DBControl
+package com.snowdango.numac.model
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.snowdango.numac.ListFormat.AppListFormat
 import java.util.*
+
+/// create database and (read and write)
 
 class DataBaseHelper
 (context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {

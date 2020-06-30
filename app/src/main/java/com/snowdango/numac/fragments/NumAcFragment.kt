@@ -1,4 +1,4 @@
-package com.snowdango.numac.NumAcMain
+package com.snowdango.numac.fragments
 
 import android.animation.ObjectAnimator
 import android.os.Build
@@ -15,7 +15,16 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.snowdango.numac.controller.ButtonClickEvent
+import com.snowdango.numac.controller.ClickTextChanger
 import com.snowdango.numac.R
+import com.snowdango.numac.activites.NumAcActivity
+
+/*
+This class listen by main Activity.
+create view and on click event.
+this class use handler and runnable.
+ */
 
 class NumAcFragment : Fragment(), View.OnClickListener {
     private lateinit var buttons: Array<Button>

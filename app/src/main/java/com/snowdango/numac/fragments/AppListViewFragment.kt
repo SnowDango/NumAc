@@ -1,4 +1,4 @@
-package com.snowdango.numac.AppListView
+package com.snowdango.numac.fragments
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -14,11 +14,18 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import com.snowdango.numac.AppDataEditor.AppDataEditorActivity
-import com.snowdango.numac.DBControl.FirstLoadAppDb
-import com.snowdango.numac.ListFormat.AppListFormat
-import com.snowdango.numac.NumAcMain.NumAcActivity
+import com.snowdango.numac.activites.AppDataEditorActivity
+import com.snowdango.numac.views.AppsListAdapter
+import com.snowdango.numac.controller.FirstLoadAppDb
+import com.snowdango.numac.model.AppListFormat
+import com.snowdango.numac.activites.NumAcActivity
 import com.snowdango.numac.R
+
+/*
+This fragment listen by AppListViewActivity.
+set EditText for search and custom list view (created by AppListAdapter).
+get long click event , text change event and click event.
+ */
 
 class AppListViewFragment : Fragment(), TextWatcher, OnItemClickListener, OnItemLongClickListener {
     private lateinit var editText: EditText
