@@ -14,6 +14,7 @@ If command exist this app , replace new list in command.
  */
 
 class FirstLoadAppDb {
+
     fun firstCreateDb(dataBaseHelper: DataBaseHelper, context: Context?) {
         val appListCreate = AppListCreate()
         NumAcActivity.list = ArrayList()
@@ -25,52 +26,28 @@ class FirstLoadAppDb {
         dataBaseHelper.insertColor(dataBaseHelper, "daylight")
     }
 
-    fun updateDbList(dataBaseHelper: DataBaseHelper, context: Context?) {
+    fun updateList(dataBaseHelper: DataBaseHelper,context: Context?){
         val appListCreate = AppListCreate()
-        NumAcActivity.list = appListCreate.appRead(context!!) as ArrayList<AppListFormat>?
-        val appNameList = dataBaseHelper.getAppNameList(dataBaseHelper)
-        val appCommandList = dataBaseHelper.getAppCommandList(dataBaseHelper)
-        val queryList = ArrayList<AppListFormat>()
-        dataBaseHelper.clearTable(dataBaseHelper)
-        for (i in NumAcActivity.list!!.indices) {
-            if (NumAcActivity.list!![i].appName == appNameList[i]) {
-                var appListFormat = AppListFormat()
-                appListFormat = NumAcActivity.list!![i]
-                appListFormat.appCommand = appCommandList[i]
-                queryList.add(appListFormat)
-            } else {
-                queryList.add(NumAcActivity.list!![i])
-            }
-            dataBaseHelper.insertData(dataBaseHelper, queryList[i].appName, queryList[i].appPackageName,
-                    queryList[i].appClassName, queryList[i].appCommand)
-        }
-        NumAcActivity.list!!.clear()
-        NumAcActivity.list = queryList
-    }
-
-    fun checkAppList(dataBaseHelper: DataBaseHelper, context: Context?) {
-        val appListCreate = AppListCreate()
-        NumAcActivity.list = ArrayList()
-        NumAcActivity.list = appListCreate.appRead(context!!) as ArrayList<AppListFormat>?
-        val appNameList = dataBaseHelper.getAppNameList(dataBaseHelper)
-        for (i in NumAcActivity.list!!.indices) {
-            if (!appNameList.contains(NumAcActivity.list!![i].appName)) {
-                dataBaseHelper.insertData(dataBaseHelper, NumAcActivity.list!![i].appName,
-                        NumAcActivity.list!![i].appPackageName, NumAcActivity.list!![i].appClassName, NumAcActivity.list!![i].appCommand)
+        val queryList = appListCreate.appRead(context!!) as ArrayList<AppListFormat>?
+        for( app in queryList!!){
+            if(!dataBaseHelper.getDataExist(dataBaseHelper, app.appPackageName!!)){
+                dataBaseHelper.insertData(dataBaseHelper,app.appName,app.appPackageName,app.appClassName,app.appCommand)
             }
         }
-    }
-
-    fun setCommandList(dataBaseHelper: DataBaseHelper) {
-        val appCommandList = dataBaseHelper.getAppCommandList(dataBaseHelper)
-        val queryList = ArrayList<AppListFormat>()
-        for (i in NumAcActivity.list!!.indices) {
-            var appListFormat = AppListFormat()
-            appListFormat = NumAcActivity.list!![i]
-            appListFormat.appCommand = appCommandList[i]
-            queryList.add(appListFormat)
+        val appIcon = appListCreate.appIcon(context)
+        val appPackage = appListCreate.appPackage(context)
+        NumAcActivity.list?.clear()
+        NumAcActivity.list = dataBaseHelper.getList(dataBaseHelper)
+        val iterator = NumAcActivity.list?.iterator()
+        while (iterator?.hasNext()!!){
+            val app = iterator.next()
+            val id = appPackage.indexOf(app.appPackageName)
+            if(id != -1) {
+                app.appIcon = appIcon[id]
+            }else{
+                dataBaseHelper.deleteApp(dataBaseHelper, app.appPackageName!!)
+                iterator.remove()
+            }
         }
-        NumAcActivity.list!!.clear()
-        NumAcActivity.list = queryList
     }
 }

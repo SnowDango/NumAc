@@ -138,6 +138,17 @@ class DataBaseHelper
         db.execSQL("delete from $TABLE_NAME where $COLUMN_NAME_TITLE1 = ?", arrayOf(appName))
     }
 
+    fun deleteAppForPackage(dataBaseHelper: DataBaseHelper, appPackageName: String) {
+        val db = dataBaseHelper.writableDatabase
+        db.execSQL("delete from $TABLE_NAME where $COLUMN_NAME_TITLE2 = ?", arrayOf(appPackageName))
+    }
+
+    fun getDataExist(dataBaseHelper: DataBaseHelper,appPackageName: String): Boolean {
+        val db = dataBaseHelper.readableDatabase
+        val cursor = db.rawQuery("select $COLUMN_NAME_TITLE2 from $TABLE_NAME WHERE $COLUMN_NAME_TITLE2 = ?", arrayOf(appPackageName))
+        return cursor.moveToFirst()
+    }
+
     companion object {
         //database version
         private const val DATABASE_VERSION = 1

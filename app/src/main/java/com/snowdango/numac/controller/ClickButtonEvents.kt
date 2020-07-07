@@ -34,7 +34,7 @@ class ClickButtonEvents {
             NumAcActivity.dataBaseHelper!!.deleteApp(NumAcActivity.dataBaseHelper!!, appName!!)
             NumAcActivity.list!!.removeAt(appId)
             val firstLoadAppDb = FirstLoadAppDb()
-            firstLoadAppDb.updateDbList(NumAcActivity.dataBaseHelper!!, context)
+            firstLoadAppDb.updateList(NumAcActivity.dataBaseHelper!!, context)
         } catch (e: Exception) {
             errorChecker = false
         } finally {

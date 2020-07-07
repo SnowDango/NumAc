@@ -79,11 +79,6 @@ class AppListViewFragment : Fragment(), TextWatcher, OnItemClickListener, OnItem
         return true
     }
 
-    fun appChecker() {
-        val firstLoadAppDb = FirstLoadAppDb()
-        firstLoadAppDb.updateDbList(NumAcActivity.dataBaseHelper!!, activity)
-    }
-
     fun AlertCreate(title: String?, message: String?, positive: String?, positiveListener: DialogInterface.OnClickListener?,
                             negative: String?, negativeListener: DialogInterface.OnClickListener?) {
         NumAcActivity.builder!!.setTitle(title)

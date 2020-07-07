@@ -38,7 +38,7 @@ class WaitTimeFragment : Fragment() {
         }
         appChecker = Runnable {
             val firstLoadAppDb = FirstLoadAppDb()
-            firstLoadAppDb.updateDbList(NumAcActivity.dataBaseHelper!!, activity)
+            firstLoadAppDb.updateList(NumAcActivity.dataBaseHelper!!, activity)
             Log.d("appCheckFinish", NumAcActivity.list!!.size.toString())
             changeFragment()
         }

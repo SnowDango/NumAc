@@ -153,7 +153,7 @@ class NumAcActivity : AppCompatActivity() {
         }
 
         val firstLoadAppDb = FirstLoadAppDb()
-        firstLoadAppDb.updateDbList(dataBaseHelper!!, this)
+        firstLoadAppDb.updateList(dataBaseHelper!!, this)
     }
 
     private fun loadAppList() {

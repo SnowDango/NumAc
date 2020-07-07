@@ -84,13 +84,13 @@ class NumAcFragment : Fragment(), View.OnClickListener {
 
         //setting message padding
         textView = v.findViewById(R.id.some_things_message)
-        textView.setTextSize(NumAcActivity.metrics!!.heightPixels / 70.toFloat()) // textの設定
-        textView.setText("")
+        textView.textSize = NumAcActivity.metrics!!.heightPixels / 70.toFloat() // textの設定
+        textView.text = ""
         loadSeek = v.findViewById(R.id.loading_seek_bar)
-        loadSeek.setMax(100)
-        loadSeek.setProgress(100)
-        loadSeek.getThumb().mutate().alpha = 0
-        loadSeek.setOnTouchListener(OnTouchListener { view: View?, motionEvent: MotionEvent? -> true })
+        loadSeek.max = 100
+        loadSeek.progress = 100
+        loadSeek.thumb.mutate().alpha = 0
+        loadSeek.setOnTouchListener(OnTouchListener { _: View?, _: MotionEvent? -> true })
         textLinear = v.findViewById(R.id.textLinear)
         textLinear.setPadding(0, NumAcActivity.metrics!!.heightPixels / 5, 0, NumAcActivity.metrics!!.heightPixels / 5)
 
@@ -99,7 +99,7 @@ class NumAcFragment : Fragment(), View.OnClickListener {
         buttonLinear = v.findViewById(R.id.button_layout)
 
         //setting LinearLayout
-        buttonLinear.setMinimumHeight(NumAcActivity.metrics!!.heightPixels / 2 / 3)
+        buttonLinear.minimumHeight = NumAcActivity.metrics!!.heightPixels / 2 / 3
 
         // set button Click Listener
         for (i in buttons.indices) buttons[i].setOnClickListener(this)
@@ -109,13 +109,13 @@ class NumAcFragment : Fragment(), View.OnClickListener {
         val c = ClickTextChanger()
         c.clickEvents(v.id, textPut, textView)
         var updateLateTime = 1000
-        if (textView!!.text.length == 4) {
+        if (textView.text.length == 4) {
             handler = null
             upHandler = null
-            val command = textView!!.text as String
+            val command = textView.text as String
             for (s in NumAcActivity.sharpCommandList!!) {
                 if (s.command == command) {
-                    textView!!.text = s.text
+                    textView.text = s.text
                     textPut = false
                     updateLateTime = s.updateLateTime
                     if (s.text == "Loading Now") {
@@ -138,7 +138,7 @@ class NumAcFragment : Fragment(), View.OnClickListener {
                 if (intent != null) {
                     startActivity(intent)
                 } else {
-                    textView!!.setText(R.string.undefined_app)
+                    textView.setText(R.string.undefined_app)
                 }
                 upHandler = Handler()
                 upHandler!!.postDelayed(updateText, updateLateTime.toLong())
