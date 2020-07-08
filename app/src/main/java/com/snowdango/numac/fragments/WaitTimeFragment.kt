@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.app.AppLaunchChecker
 import androidx.fragment.app.Fragment
@@ -30,7 +31,15 @@ class WaitTimeFragment : Fragment() {
 
     override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
         super.onViewCreated(v, savedInstanceState)
+
+        val loadLinear: LinearLayout = v.findViewById(R.id.loadLinear)
+        val logoLinear: LinearLayout = v.findViewById(R.id.logoLinear)
+
         progressBar = v.findViewById(R.id.wait_progress)
+
+        loadLinear.minimumHeight = NumAcActivity.metrics!!.heightPixels *  3/5
+        logoLinear.minimumHeight = NumAcActivity.metrics!!.heightPixels *  2/5
+
         firstAppLoading = Runnable {
             val firstLoadAppDb = FirstLoadAppDb()
             firstLoadAppDb.firstCreateDb(NumAcActivity.dataBaseHelper!!, activity)
@@ -38,7 +47,7 @@ class WaitTimeFragment : Fragment() {
         }
         appChecker = Runnable {
             val firstLoadAppDb = FirstLoadAppDb()
-            firstLoadAppDb.updateDbList(NumAcActivity.dataBaseHelper!!, activity)
+            firstLoadAppDb.updateList(NumAcActivity.dataBaseHelper!!, activity)
             Log.d("appCheckFinish", NumAcActivity.list!!.size.toString())
             changeFragment()
         }

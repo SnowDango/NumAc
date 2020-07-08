@@ -28,12 +28,14 @@ class AppDataEditorFragment : Fragment(), View.OnClickListener {
     private lateinit var appNameView: TextView
     private lateinit var appCommand: EditText
     var appName = "Error"
+    var appPackageName = "Error"
     var oldCommand = "0000"
     private var appPosition = -1
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         appName = activity!!.intent.getStringExtra("appName")
+        appPackageName = activity!!.intent.getStringExtra("appPackageName")
         val appDataEditorActivity = AppDataEditorActivity()
-        appPosition = appDataEditorActivity.searchAppFormList(appName)
+        appPosition = appDataEditorActivity.searchAppFormList(appPackageName)
         if (appPosition != -1) {
             val appData = NumAcActivity.list!![appPosition]
             oldCommand = appData.appCommand.toString()
@@ -58,7 +60,7 @@ class AppDataEditorFragment : Fragment(), View.OnClickListener {
         }
         if (appPosition == -1) {
             val c = ClickButtonEvents()
-            c.AlertCreate("Sorry", """Sorry, Can't find this app.please push reload appList command("##00")""".trimIndent(),
+            c.alertCreate("Sorry", """Sorry, Can't find this app.please push reload appList command("##00")""".trimIndent(),
                     "OK", null, null, null)
         }
     }
@@ -67,24 +69,24 @@ class AppDataEditorFragment : Fragment(), View.OnClickListener {
         val c = ClickButtonEvents()
         if (appPosition != -1) {
             when (v.id) {
-                R.id.uninstall_button -> c.AlertCreate("UnInstallApp", "Really? Do you want yo uninstall this app?", "OK"
+                R.id.uninstall_button -> c.alertCreate("UnInstallApp", "Really? Do you want yo uninstall this app?", "OK"
                         , DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
                     val uninstallIntent = c.uninstallApp(oldCommand)
                     if (uninstallIntent != null) {
                         startActivity(uninstallIntent)
-                        c.deleteApp(appPosition, appName, activity)
+                        c.deleteApp(appPosition, appPackageName, activity)
                     } else {
-                        c.AlertCreate("Sorry", "I can't  this app.", "OK"
+                        c.alertCreate("Sorry", "I can't  this app.", "OK"
                                 , null, null, null)
                     }
                 }, "Cancel", null)
-                R.id.replace_button -> c.AlertCreate("Change Command", "Really? Do you want yo change this app's command ?", " OK"
+                R.id.replace_button -> c.alertCreate("Change Command", "Really? Do you want yo change this app's command ?", " OK"
                         , DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
                     val newCommand = appCommand.text.toString()
                     if (c.checkCommandFormat(newCommand)) {
                         if (c.checkNewCommandForList(newCommand)) {
-                            if (c.changeAppCommand(appPosition, appName, newCommand)) {
-                                c.AlertCreate("Finish", "Finish update!! \n I change this app's command"
+                            if (c.changeAppCommand(appPosition, appPackageName, newCommand)) {
+                                c.alertCreate("Finish", "Finish update!! \n I change this app's command"
                                         , "OK", null, null, null)
                             }
                         }
@@ -92,7 +94,7 @@ class AppDataEditorFragment : Fragment(), View.OnClickListener {
                 }, "Cancel", null)
             }
         } else {
-            c.AlertCreate("Sorry", """Sorry, Can't find this app.please push reload appList command("##00")""".trimIndent(),
+            c.alertCreate("Sorry", """Sorry, Can't find this app.please push reload appList command("##00")""".trimIndent(),
                     "OK", null, null, null)
         }
     }

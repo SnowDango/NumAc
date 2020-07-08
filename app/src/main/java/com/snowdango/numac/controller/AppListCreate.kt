@@ -2,8 +2,10 @@ package com.snowdango.numac.controller
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import com.snowdango.numac.models.AppListFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /*
 When First Lunch this application and update app list, listened this class.
@@ -14,7 +16,7 @@ Launchable application set ArrayList
  */
 
 class AppListCreate {
-    fun appRead(context: Context): List<AppListFormat> {
+    fun appRead(context: Context): List<AppListFormat> { // app read at package info
         val data: MutableList<AppListFormat> = ArrayList()
         val pm = context.applicationContext.packageManager
         val pkgInfoList = pm.getInstalledPackages(0)
@@ -32,6 +34,34 @@ class AppListCreate {
             }
         }
         return data
+    }
+
+    fun appIcon(context: Context): List<Drawable>{
+        var appIconDrawable: ArrayList<Drawable> = ArrayList<Drawable>()
+        val pm = context.applicationContext.packageManager
+        val pkgInfoList = pm.getInstalledPackages(0)
+        val i = Intent(Intent.ACTION_MAIN, null)
+        i.addCategory(Intent.CATEGORY_LAUNCHER)
+        for (pckInfo in pkgInfoList) {
+            if (pm.getLaunchIntentForPackage(pckInfo.packageName) != null) {
+                appIconDrawable.add(pckInfo.applicationInfo.loadIcon(pm))
+            }
+        }
+        return appIconDrawable
+    }
+
+    fun appPackage(context: Context): List<String>{
+        var appPackageName: ArrayList<String> = ArrayList<String>()
+        val pm = context.applicationContext.packageManager
+        val pkgInfoList = pm.getInstalledPackages(0)
+        val i = Intent(Intent.ACTION_MAIN, null)
+        i.addCategory(Intent.CATEGORY_LAUNCHER)
+        for (pckInfo in pkgInfoList) {
+            if (pm.getLaunchIntentForPackage(pckInfo.packageName) != null) {
+                appPackageName.add(pckInfo.packageName)
+            }
+        }
+        return appPackageName
     }
 
     private fun randomCommand(): String {

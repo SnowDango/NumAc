@@ -42,10 +42,10 @@ class AppDataEditorActivity : AppCompatActivity() {
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
     }
 
-    fun searchAppFormList(appName: String): Int {
+    fun searchAppFormList(appPackageName: String): Int {
         var appPosition = -1
         for (i in NumAcActivity.list!!.indices) {
-            if (NumAcActivity.list!![i].appName == appName) {
+            if (NumAcActivity.list!![i].appPackageName == appPackageName) {
                 appPosition = i
                 break
             }

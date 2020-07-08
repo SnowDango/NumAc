@@ -4,6 +4,7 @@
 
 package com.snowdango.numac.activites
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,6 +15,8 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowManager
+import android.view.animation.DecelerateInterpolator
+import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -153,7 +156,7 @@ class NumAcActivity : AppCompatActivity() {
         }
 
         val firstLoadAppDb = FirstLoadAppDb()
-        firstLoadAppDb.updateDbList(dataBaseHelper!!, this)
+        firstLoadAppDb.updateList(dataBaseHelper!!, this)
     }
 
     private fun loadAppList() {
