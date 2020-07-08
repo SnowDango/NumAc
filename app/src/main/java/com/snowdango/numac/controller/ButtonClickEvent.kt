@@ -1,5 +1,6 @@
 package com.snowdango.numac.controller
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Handler
 import android.util.Log

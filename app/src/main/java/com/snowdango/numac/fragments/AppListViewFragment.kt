@@ -16,7 +16,6 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.snowdango.numac.activites.AppDataEditorActivity
 import com.snowdango.numac.views.AppsListAdapter
-import com.snowdango.numac.controller.FirstLoadAppDb
 import com.snowdango.numac.models.AppListFormat
 import com.snowdango.numac.activites.NumAcActivity
 import com.snowdango.numac.R
@@ -66,7 +65,7 @@ class AppListViewFragment : Fragment(), TextWatcher, OnItemClickListener, OnItem
                 activity!!.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
         } catch (e: Exception) {
-            AlertCreate("Error ", "Sorry \n I missed open this application.",
+            alertCreate("Error ", "Sorry \n I missed open this application.",
                     "OK", null, null, null)
         }
     }
@@ -75,11 +74,12 @@ class AppListViewFragment : Fragment(), TextWatcher, OnItemClickListener, OnItem
         val selectApp = appsListAdapter!!.getItem(position) as AppListFormat
         val intent = Intent(activity, AppDataEditorActivity::class.java)
         intent.putExtra("appName", selectApp.appName)
+        intent.putExtra("appPackageName",selectApp.appPackageName)
         startActivity(intent)
         return true
     }
 
-    fun AlertCreate(title: String?, message: String?, positive: String?, positiveListener: DialogInterface.OnClickListener?,
+    private fun alertCreate(title: String?, message: String?, positive: String?, positiveListener: DialogInterface.OnClickListener?,
                             negative: String?, negativeListener: DialogInterface.OnClickListener?) {
         NumAcActivity.builder!!.setTitle(title)
         NumAcActivity.builder!!.setMessage(message)

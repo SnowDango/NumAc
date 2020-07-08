@@ -1,5 +1,6 @@
 package com.snowdango.numac.models
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -61,6 +62,7 @@ class DataBaseHelper
         onUpgrade(db, oldVersion, newVersion)
     }
 
+    @SuppressLint("Recycle")
     fun getPackageAndClass(dataBaseHelper: DataBaseHelper, command: String): Array<String> {
         val db = dataBaseHelper.readableDatabase
         val cursor = db.rawQuery("select $COLUMN_NAME_TITLE2 , $COLUMN_NAME_TITLE3 from $TABLE_NAME where $COLUMN_NAME_TITLE4 = ?", arrayOf(command))
@@ -68,6 +70,7 @@ class DataBaseHelper
         return arrayOf(cursor.getString(0), cursor.getString(1))
     }
 
+    @SuppressLint("Recycle")
     fun getAppNameList(dataBaseHelper: DataBaseHelper): ArrayList<String> {
         val db = dataBaseHelper.readableDatabase
         val cursor = db.rawQuery("select $COLUMN_NAME_TITLE1 from $TABLE_NAME", arrayOf())
@@ -80,6 +83,7 @@ class DataBaseHelper
         return appDataList
     }
 
+    @SuppressLint("Recycle")
     fun getAppCommandList(dataBaseHelper: DataBaseHelper): ArrayList<String> {
         val db = dataBaseHelper.readableDatabase
         val cursor = db.rawQuery("select $COLUMN_NAME_TITLE4 from $TABLE_NAME", arrayOf())
@@ -120,6 +124,7 @@ class DataBaseHelper
         db.execSQL("update $TABLE_NAME2 set $COLUMN_NAME_TITLE5 = ? where $_ID = 1", arrayOf(color))
     }
 
+    @SuppressLint("Recycle")
     fun getThemeColor(dataBaseHelper: DataBaseHelper): String {
         val db = dataBaseHelper.readableDatabase
         val cursor = db.rawQuery("select $COLUMN_NAME_TITLE5 from $TABLE_NAME2", arrayOf())
@@ -128,14 +133,15 @@ class DataBaseHelper
         return cursor.getString(0)
     }
 
+    @SuppressLint("Recycle")
     fun clearTable(dataBaseHelper: DataBaseHelper) {
         val db = dataBaseHelper.writableDatabase
         db.rawQuery("delete from $TABLE_NAME", arrayOf())
     }
 
-    fun deleteApp(dataBaseHelper: DataBaseHelper, appName: String) {
+    fun deleteApp(dataBaseHelper: DataBaseHelper, appPackageName: String) {
         val db = dataBaseHelper.writableDatabase
-        db.execSQL("delete from $TABLE_NAME where $COLUMN_NAME_TITLE1 = ?", arrayOf(appName))
+        db.execSQL("delete from $TABLE_NAME where $COLUMN_NAME_TITLE2 = ?", arrayOf(appPackageName))
     }
 
     fun deleteAppForPackage(dataBaseHelper: DataBaseHelper, appPackageName: String) {
@@ -143,7 +149,8 @@ class DataBaseHelper
         db.execSQL("delete from $TABLE_NAME where $COLUMN_NAME_TITLE2 = ?", arrayOf(appPackageName))
     }
 
-    fun getDataExist(dataBaseHelper: DataBaseHelper,appPackageName: String): Boolean {
+    @SuppressLint("Recycle")
+    fun getDataExist(dataBaseHelper: DataBaseHelper, appPackageName: String): Boolean {
         val db = dataBaseHelper.readableDatabase
         val cursor = db.rawQuery("select $COLUMN_NAME_TITLE2 from $TABLE_NAME WHERE $COLUMN_NAME_TITLE2 = ?", arrayOf(appPackageName))
         return cursor.moveToFirst()

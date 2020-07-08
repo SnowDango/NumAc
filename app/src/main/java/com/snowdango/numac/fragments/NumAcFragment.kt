@@ -1,6 +1,7 @@
 package com.snowdango.numac.fragments
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -51,6 +52,7 @@ class NumAcFragment : Fragment(), View.OnClickListener {
 
     /* listener after on create view
        organize view and set button click events */
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
         super.onViewCreated(v, savedInstanceState)
@@ -119,16 +121,17 @@ class NumAcFragment : Fragment(), View.OnClickListener {
                     textPut = false
                     updateLateTime = s.updateLateTime
                     if (s.text == "Loading Now") {
-                        val animation = ObjectAnimator.ofInt(loadSeek, "progress", 0, 100) // see this max value coming back here, we animale towards that value
+                        val animation = ObjectAnimator.ofInt(loadSeek, "progress", 0, 100)
+                        // see this max value coming back here, we animale towards that value
                         animation.duration = 4000 //in milliseconds
                         animation.interpolator = DecelerateInterpolator()
                         animation.start()
                         Log.d("animation", "read")
                     }
                     handler = Handler()
-                    handler!!.postDelayed(s.runnable, s.lateTime.toLong())
+                    handler?.postDelayed(s.runnable, s.lateTime.toLong())
                     upHandler = Handler()
-                    upHandler!!.postDelayed(updateText, updateLateTime.toLong())
+                    upHandler?.postDelayed(updateText, updateLateTime.toLong())
                     break
                 }
             }
@@ -141,7 +144,7 @@ class NumAcFragment : Fragment(), View.OnClickListener {
                     textView.setText(R.string.undefined_app)
                 }
                 upHandler = Handler()
-                upHandler!!.postDelayed(updateText, updateLateTime.toLong())
+                upHandler?.postDelayed(updateText, updateLateTime.toLong())
             }
         }
     }
