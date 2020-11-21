@@ -20,7 +20,7 @@ class CommandActionCreator(private val coroutineScope: CoroutineScope,private va
     }
 
     private suspend fun launchCommand(command: String, appList: ArrayList<AppInfo>){
-        if(!command[0].equals("#") && command == "0000") {
+        if(!command[0].equals("#") && command != "0000") {
             val errorStringList = SingletonContext.applicationContext().resources.getStringArray(R.array.error_log)
             try {
                 val filter = appList.filter { appInfo -> appInfo.command == command }
