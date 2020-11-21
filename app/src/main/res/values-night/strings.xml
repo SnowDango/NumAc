@@ -1,10 +1,37 @@
 <resources>
     <string name="app_name">NumAc</string>
 
-    <string name="please_push_number">Please push number</string>
+    <string name="please_push_number">Please Push Number</string>
     <string name="wait_text">Please Wait. Now AppList Loading.</string>
     <string name="hint">Please enter the name you want to search</string>
     <string name="undefined_app">Undefined Application</string>
     <string name="create_by_snowdango">create by SnowDango</string>
+
+    <string-array name="button_string">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>clear</item>
+        <item>0</item>
+        <item>#</item>
+    </string-array>
+
+    <string-array name="error_log">
+        <item>Exception</item>
+        <item>Not Found Application</item>
+        <item>Intent is Null</item>
+    </string-array>
+
+    <string-array name="sharp_command">
+        <item>####</item>
+        <item>0000</item>
+        <item>##000</item>
+    </string-array>
 
 </resources>

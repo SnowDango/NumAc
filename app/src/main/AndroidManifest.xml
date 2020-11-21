@@ -11,32 +11,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".SingletonContext"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.snowdango.numac.activites.NumAcActivity"
+            android:name="com.snowdango.numac.activity.main.MainActivity"
             android:excludeFromRecents="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.SEND"/>
+                <!---
                 <category android:name="android.intent.category.HOME"/>
                 <category android:name="android.intent.category.DEFAULT"/>
+                -->
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
-        <activity android:name="com.snowdango.numac.activites.AppListViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-        </activity>
-        <activity android:name="com.snowdango.numac.activites.AppDataEditorActivity">
-
-        </activity>
-
     </application>
 
 </manifest>
