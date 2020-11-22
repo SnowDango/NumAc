@@ -31,7 +31,7 @@
     <string-array name="sharp_command">
         <item>####</item>
         <item>0000</item>
-        <item>##000</item>
+        <item>##00</item>
     </string-array>
 
 </resources>

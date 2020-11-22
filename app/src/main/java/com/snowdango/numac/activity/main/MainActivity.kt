@@ -1,6 +1,5 @@
 package com.snowdango.numac.activity.main
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -34,7 +33,7 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        appListActionCreator.execute()
+        roadData()
 
         val mainButtonController = MainButtonController( object : MainButtonController.ClickListener{
             override fun itemClickListener(string: String) {
@@ -50,15 +49,16 @@ class MainActivity: AppCompatActivity() {
         }
 
         mainButtonController.setData(resources.getStringArray(R.array.button_string))
-        progressMaterial.visibility = View.VISIBLE
         errorOverlay.visibility = View.GONE
 
-        store.appListActionData.observe(this, Observer {
-            appListActionDataObserver(it)
-        })
-        store.commandActionData.observe(this, Observer {
-            commandActionDataObserver(it)
-        })
+        store.appListActionData.observe(this, appListActionDataObserver)
+        store.commandActionData.observe(this, commandActionDataObserver)
+    }
+
+    private fun roadData(){
+        appListActionCreator.execute()
+        textView.text = getString(R.string.wait_text)
+        progressMaterial.visibility = View.VISIBLE
     }
 
     override fun onPause() {
@@ -66,20 +66,24 @@ class MainActivity: AppCompatActivity() {
         coroutineScope.cancel()
     }
 
-    private fun appListActionDataObserver(state: AppListActionState){
-        when(state){
+    private val appListActionDataObserver = Observer<AppListActionState> {
+        when(it){
             is AppListActionState.Failed -> Log.d("AppListAction","Failed")
-            is AppListActionState.Success -> progressMaterial.visibility = View.INVISIBLE
-            is AppListActionState.None -> return
+            is AppListActionState.Success -> {
+                progressMaterial.visibility = View.INVISIBLE
+                textView.text = getString(R.string.please_push_number)
+            }
+            is AppListActionState.None -> return@Observer
         }
     }
 
-    private fun commandActionDataObserver(state: CommandActionState){
-        when(state){
+    private val commandActionDataObserver  = Observer<CommandActionState> {
+        when(it){
             is CommandActionState.Success -> textView.text = getString(R.string.please_push_number)
-            is CommandActionState.Failed -> errorView(state.failedState)
-            is CommandActionState.None -> return
+            is CommandActionState.Failed -> errorView(it.failedState)
             is CommandActionState.Recreate -> recreate()
+            is CommandActionState.Road -> roadData()
+            is CommandActionState.None -> return@Observer
         }
     }
 
@@ -90,7 +94,7 @@ class MainActivity: AppCompatActivity() {
         coroutineScope.launch(Dispatchers.Default){
             Thread.sleep(2000)
             textView.text = getString(R.string.please_push_number)
-            textView.setTextColor(Color.BLACK)
+            textView.setTextColor(getColor(R.color.fullactivityText))
             coroutineScope.launch(Dispatchers.Main) {
                 errorOverlay.visibility = View.GONE
             }
@@ -104,12 +108,15 @@ class MainActivity: AppCompatActivity() {
             textView.text = getString(R.string.please_push_number)
         }else{
             when {
-                errorStringList.indexOf(textStatus) != -1 -> return
+                errorStringList.indexOf(textStatus) != -1 || textStatus == getString(R.string.wait_text) -> return
                 textStatus == getString(R.string.please_push_number) -> textView.text = string
                 textStatus.length < 3 -> textView.text = textStatus.plus(string)
                 else -> {
                     if(store.appListActionData.value is AppListActionState.Success)
-                        commandActionCreator.execute(textStatus.plus(string), (store.appListActionData.value as AppListActionState.Success).appList)
+                        commandActionCreator.execute(
+                                textStatus.plus(string),
+                                (store.appListActionData.value as AppListActionState.Success).appList
+                        )
                     textView.text = getString(R.string.please_push_number)
                 }
             }

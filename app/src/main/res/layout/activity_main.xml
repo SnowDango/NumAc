@@ -12,6 +12,7 @@
         android:layout_height="40dp"
         android:text="@string/please_push_number"
         android:textAlignment="center"
+        android:textColor="@color/fullactivityText"
         app:autoSizeTextType="uniform"
         app:layout_constraintTop_toTopOf="@id/recyclerView"
         app:layout_constraintBottom_toTopOf="@id/progressMaterial"/>
