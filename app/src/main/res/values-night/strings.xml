@@ -3,6 +3,7 @@
 
     <string name="please_push_number">Please Push Number</string>
     <string name="wait_text">Please Wait. Now AppList Loading.</string>
+    <string name="change_mode">Change View Mode</string>
     <string name="hint">Please enter the name you want to search</string>
     <string name="undefined_app">Undefined Application</string>
     <string name="create_by_snowdango">create by SnowDango</string>

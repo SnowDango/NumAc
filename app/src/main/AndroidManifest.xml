@@ -29,6 +29,10 @@
 
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.appview.AppViewActivity">
+
+        </activity>
     </application>
 
 </manifest>

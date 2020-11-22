@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <data>
+        <variable name="appName" type="String" />
+        <variable name="appCommand" type="String" />
+        <variable name="appIcon" type="android.graphics.drawable.Drawable" />
+        <variable name="appOnClickListener" type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/linearApp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/app_view_tile"
+        android:onClick="@{appOnClickListener}">
+
+        <TextView
+            android:id="@+id/appCommandView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:text="@{appCommand}"
+            android:maxLines="1"/>
+
+        <com.santalu.aspectratioimageview.AspectRatioImageView
+            android:id="@+id/appIconView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="#00000000"
+            app:ari_ratio="0.8"
+            android:src="@{appIcon}"/>
+
+        <TextView
+            android:id="@+id/appNameView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:text="@{appName}"
+            android:maxLines="1"/>
+    </LinearLayout>
+</layout>

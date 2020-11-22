@@ -1,17 +1,17 @@
 package com.snowdango.numac.actions.command
 
-import com.snowdango.numac.R
-import com.snowdango.numac.SingletonContext
-import com.snowdango.numac.dispatcher.main.Dispatcher
-import com.snowdango.numac.domain.AppInfo
+import com.snowdango.numac.dispatcher.main.MainDispatcher
+import com.snowdango.numac.data.repository.dao.entity.AppInfo
+import com.snowdango.numac.domain.usecase.LaunchApp
+import com.snowdango.numac.domain.usecase.SharpCommandExecute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
-class CommandActionCreator(private val coroutineScope: CoroutineScope,private val dispatcher: Dispatcher) {
+class CommandActionCreator(private val coroutineScope: CoroutineScope,private val mainDispatcher: MainDispatcher) {
 
-    private val sharpCommandActionFunction = SharpCommandActionFunction(coroutineScope)
+    private val launchApp = LaunchApp()
+    private val sharpCommandExecute = SharpCommandExecute(coroutineScope)
 
     fun execute(command: String,appList: ArrayList<AppInfo>){
         coroutineScope.launch(Dispatchers.Default){
@@ -19,44 +19,24 @@ class CommandActionCreator(private val coroutineScope: CoroutineScope,private va
         }
     }
 
-
     private suspend fun actionCreate(command: String,appList: ArrayList<AppInfo>){
-        val action: CommandAction = when {
-            command.indexOf("#") == -1 && command != "0000" -> launchApp(command,appList)
-            else -> executeCommand(command)
+        val result: Any = when {
+            command.indexOf("#") == -1 && command != "0000" -> launchApp.launchApplication(command,appList)
+            else -> sharpCommandExecute.executeCommand(command)
         }
+
+        val action: CommandAction = when(result) {
+            is LaunchApp.LaunchResult.Success -> CommandAction(CommandActionState.Success)
+            is LaunchApp.LaunchResult.Failed -> CommandAction(CommandActionState.Failed(result.failedState))
+            is SharpCommandExecute.CommandResult.Recreate -> CommandAction(CommandActionState.Recreate)
+            is SharpCommandExecute.CommandResult.Road -> CommandAction(CommandActionState.Road)
+            is SharpCommandExecute.CommandResult.AppViewIntent -> CommandAction(CommandActionState.AppViewIntent)
+            is SharpCommandExecute.CommandResult.Failed -> CommandAction(CommandActionState.Failed(result.errorString))
+            else -> CommandAction(CommandActionState.Failed("Exception"))
+        }
+
         coroutineScope.launch(Dispatchers.Main){
-            dispatcher.dispatchCommand(action)
-        }
-    }
-
-    private suspend fun launchApp(command: String,appList: ArrayList<AppInfo>): CommandAction{
-        val errorStringList = SingletonContext.applicationContext().resources.getStringArray(R.array.error_log)
-        return try {
-            val filter = appList.filter { appInfo -> appInfo.command == command }
-            val pm = SingletonContext.applicationContext().packageManager
-            if (filter.isNotEmpty()) {
-                val intent = pm.getLaunchIntentForPackage(filter[0].packageName)
-                if (intent != null) {
-                    SingletonContext.applicationContext().startActivity(intent)
-                    CommandAction(CommandActionState.Success)
-                } else CommandAction(CommandActionState.Failed(errorStringList[2]))
-            } else CommandAction(CommandActionState.Failed(errorStringList[1]))
-        } catch (e: Exception) {
-            CommandAction(CommandActionState.Failed(errorStringList[0]))
-        }
-    }
-
-    private suspend fun executeCommand(command: String): CommandAction{
-        return try {
-            val commandResult = sharpCommandActionFunction.sharpCommandExecute(command)
-            when (commandResult.first) {
-                0 -> CommandAction(CommandActionState.Recreate)
-                1 -> CommandAction(CommandActionState.Road)
-                else -> CommandAction(CommandActionState.Failed(commandResult.second))
-            }
-        }catch (e: Exception){
-            CommandAction(CommandActionState.Failed("Exception"))
+            mainDispatcher.dispatchCommand(action)
         }
     }
 }

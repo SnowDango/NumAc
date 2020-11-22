@@ -1,59 +1,36 @@
 package com.snowdango.numac.actions.applist
 
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
-import android.util.Log
-import com.snowdango.numac.SingletonContext
-import com.snowdango.numac.dispatcher.main.Dispatcher
-import com.snowdango.numac.domain.AppInfo
+import com.snowdango.numac.dispatcher.main.MainDispatcher
+import com.snowdango.numac.domain.usecase.AppListCreate
+import com.snowdango.numac.domain.usecase.AppListDatabaseUse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AppListActionCreator(private val coroutineScope: CoroutineScope, private val dispatcher: Dispatcher) {
+class AppListActionCreator(private val coroutineScope: CoroutineScope, private val mainDispatcher: MainDispatcher) {
+
+    private val appListCreate: AppListCreate = AppListCreate()
+    private val appListDatabaseUse: AppListDatabaseUse = AppListDatabaseUse()
 
     fun execute(){
-        Log.d("AppListAction","execute")
         coroutineScope.launch(Dispatchers.Default){
-            listCreate()
+            actionCreate()
         }
     }
 
-    private suspend fun listCreate(){
-        try {
-            Log.d("AppListAction","listCreate")
-            val context = SingletonContext.applicationContext()
-            val pm = context.packageManager
-            val pckInfoList: List<PackageInfo> = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES)
-            val appInfoList: ArrayList<AppInfo> = ArrayList()
-            val commandAlreadyList: ArrayList<String> = ArrayList()
-            for (pckInfo in pckInfoList) {
-                if (pm.getLaunchIntentForPackage(pckInfo.packageName) != null) {
-                    val newCommand = randomCommand(commandAlreadyList)
-                    appInfoList.add(AppInfo(
-                            pckInfo.applicationInfo.loadLabel(pm) as String,
-                            pckInfo.packageName,
-                            newCommand
-                    ))
-                    commandAlreadyList.add(newCommand)
+    private suspend fun actionCreate(){
+
+        val action = when(val actionResult = appListCreate.listCreate()){
+            is AppListCreate.CreateResult.Success ->{
+                coroutineScope.launch(Dispatchers.IO){
+                    appListDatabaseUse.appListInsert(actionResult.listAppList)
                 }
+                AppListAction(AppListActionState.Success(actionResult.listAppList))
             }
-            coroutineScope.launch(Dispatchers.Main) {
-                dispatcher.dispatchAppList(AppListAction(AppListActionState.Success(appInfoList)))
-            }
-        }catch (e:Exception){
-            Log.d("AppListAction",e.toString())
-            coroutineScope.launch(Dispatchers.Main) {
-                dispatcher.dispatchAppList(AppListAction(AppListActionState.Failed))
-            }
+            is AppListCreate.CreateResult.Failed -> AppListAction(AppListActionState.Failed)
+        }
+        coroutineScope.launch(Dispatchers.Main){
+            mainDispatcher.dispatchAppList(action)
         }
     }
-
-    private fun randomCommand(commandAlreadyList: ArrayList<String>): String{
-        val newCommand = (1000..9999).random().toString()
-        return if (commandAlreadyList.indexOf(newCommand) == -1) {
-            newCommand
-        } else {
-            randomCommand(commandAlreadyList)
-        }
-    }}
+}

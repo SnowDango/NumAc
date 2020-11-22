@@ -9,5 +9,6 @@ sealed class CommandActionState{
     object Success: CommandActionState()
     object Recreate: CommandActionState()
     object Road: CommandActionState()
+    object AppViewIntent: CommandActionState()
     data class Failed(val failedState: String): CommandActionState()
 }

@@ -15,7 +15,7 @@ class MainButtonController(
     override fun buildModels(data: Array<String>) {
         data.forEach {stringData ->
             buttonItem {
-                id("MainButton")
+                id("main_button")
                 clickListener(View.OnClickListener { clickListener.itemClickListener(stringData) })
             }
         }

@@ -1,6 +1,6 @@
 package com.snowdango.numac.actions.applist
 
-import com.snowdango.numac.domain.AppInfo
+import com.snowdango.numac.data.repository.dao.entity.AppInfo
 
 data class AppListAction(
         val state: AppListActionState

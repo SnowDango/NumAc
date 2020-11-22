@@ -1,5 +1,6 @@
 package com.snowdango.numac.activity.main
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -13,8 +14,9 @@ import com.snowdango.numac.actions.applist.AppListActionCreator
 import com.snowdango.numac.actions.applist.AppListActionState
 import com.snowdango.numac.actions.command.CommandActionCreator
 import com.snowdango.numac.actions.command.CommandActionState
-import com.snowdango.numac.dispatcher.main.Dispatcher
-import com.snowdango.numac.store.main.AppListStore
+import com.snowdango.numac.activity.appview.AppViewActivity
+import com.snowdango.numac.dispatcher.main.MainDispatcher
+import com.snowdango.numac.store.main.MainStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,10 +26,10 @@ import kotlinx.coroutines.launch
 class MainActivity: AppCompatActivity() {
 
     private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
-    private val dispatcher = Dispatcher()
+    private val dispatcher = MainDispatcher()
     private val appListActionCreator: AppListActionCreator = AppListActionCreator(coroutineScope, dispatcher)
     private val commandActionCreator: CommandActionCreator = CommandActionCreator(coroutineScope, dispatcher)
-    private val store: AppListStore = AppListStore(dispatcher)
+    private val store: MainStore = MainStore(dispatcher)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,7 @@ class MainActivity: AppCompatActivity() {
             }
         })
 
-        recyclerView.apply {
+        recyclerViewMain.apply {
             adapter = mainButtonController.adapter
             layoutManager = GridLayoutManager(applicationContext, 3).apply {
                 orientation = GridLayoutManager.VERTICAL
@@ -58,7 +60,7 @@ class MainActivity: AppCompatActivity() {
     private fun roadData(){
         appListActionCreator.execute()
         textView.text = getString(R.string.wait_text)
-        progressMaterial.visibility = View.VISIBLE
+        progressMaterialHorizontal.visibility = View.VISIBLE
     }
 
     override fun onPause() {
@@ -70,7 +72,7 @@ class MainActivity: AppCompatActivity() {
         when(it){
             is AppListActionState.Failed -> Log.d("AppListAction","Failed")
             is AppListActionState.Success -> {
-                progressMaterial.visibility = View.INVISIBLE
+                progressMaterialHorizontal.visibility = View.INVISIBLE
                 textView.text = getString(R.string.please_push_number)
             }
             is AppListActionState.None -> return@Observer
@@ -81,8 +83,12 @@ class MainActivity: AppCompatActivity() {
         when(it){
             is CommandActionState.Success -> textView.text = getString(R.string.please_push_number)
             is CommandActionState.Failed -> errorView(it.failedState)
-            is CommandActionState.Recreate -> recreate()
+            is CommandActionState.Recreate -> {
+                textView.text = getString(R.string.change_mode)
+                recreate()
+            }
             is CommandActionState.Road -> roadData()
+            is CommandActionState.AppViewIntent -> startActivity(Intent(this,AppViewActivity::class.java))
             is CommandActionState.None -> return@Observer
         }
     }
@@ -108,7 +114,9 @@ class MainActivity: AppCompatActivity() {
             textView.text = getString(R.string.please_push_number)
         }else{
             when {
-                errorStringList.indexOf(textStatus) != -1 || textStatus == getString(R.string.wait_text) -> return
+                errorStringList.indexOf(textStatus) != -1
+                        || textStatus == getString(R.string.wait_text)
+                        || textStatus == getString(R.string.change_mode) -> return
                 textStatus == getString(R.string.please_push_number) -> textView.text = string
                 textStatus.length < 3 -> textView.text = textStatus.plus(string)
                 else -> {

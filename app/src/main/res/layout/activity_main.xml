@@ -14,11 +14,11 @@
         android:textAlignment="center"
         android:textColor="@color/fullactivityText"
         app:autoSizeTextType="uniform"
-        app:layout_constraintTop_toTopOf="@id/recyclerView"
-        app:layout_constraintBottom_toTopOf="@id/progressMaterial"/>
+        app:layout_constraintTop_toTopOf="@id/recyclerViewMain"
+        app:layout_constraintBottom_toTopOf="@id/progressMaterialHorizontal"/>
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:id="@+id/progressMaterial"
+        android:id="@+id/progressMaterialHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="parent"/>
 
     <com.airbnb.epoxy.EpoxyRecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"

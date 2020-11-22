@@ -1,6 +1,5 @@
 package com.snowdango.numac.store.main
 
-import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,12 +8,13 @@ import com.snowdango.numac.actions.applist.AppListAction
 import com.snowdango.numac.actions.applist.AppListActionState
 import com.snowdango.numac.actions.command.CommandAction
 import com.snowdango.numac.actions.command.CommandActionState
-import com.snowdango.numac.dispatcher.main.Dispatcher
+import com.snowdango.numac.dispatcher.main.MainDispatcher
 
-class AppListStore(private val dispatcher: Dispatcher): ViewModel(), Dispatcher.AppListActionListener,Dispatcher.CommandActionListener{
+class MainStore(private val mainDispatcher: MainDispatcher):
+        ViewModel(), MainDispatcher.AppListActionListener,MainDispatcher.CommandActionListener{
 
     init {
-        dispatcher.register(this,this)
+        mainDispatcher.register(this,this)
     }
 
     val appListActionData: LiveData<AppListActionState> = MutableLiveData<AppListActionState>().apply { value = AppListActionState.None }
@@ -34,7 +34,7 @@ class AppListStore(private val dispatcher: Dispatcher): ViewModel(), Dispatcher.
 
     override fun onCleared() {
         super.onCleared()
-        dispatcher.unregister(this,this)
+        mainDispatcher.unregister(this,this)
     }
 
     override fun on(action: CommandAction) = updateCommand(action)
