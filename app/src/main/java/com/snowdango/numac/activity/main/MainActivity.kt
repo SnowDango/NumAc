@@ -1,6 +1,7 @@
 package com.snowdango.numac.activity.main
 
 import android.content.Intent
+import android.content.pm.PackageInstaller
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +19,6 @@ import com.snowdango.numac.activity.appview.AppViewActivity
 import com.snowdango.numac.dispatcher.main.MainDispatcher
 import com.snowdango.numac.store.main.MainStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

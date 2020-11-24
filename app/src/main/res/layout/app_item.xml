@@ -17,7 +17,6 @@
         android:orientation="vertical"
         android:clickable="true"
         android:focusable="true"
-        android:background="@drawable/app_view_tile"
         android:onClick="@{appOnClickListener}">
 
         <TextView

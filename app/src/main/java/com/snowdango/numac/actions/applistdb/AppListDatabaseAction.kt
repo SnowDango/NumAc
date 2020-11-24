@@ -1,4 +1,4 @@
-package com.snowdango.numac.actions.database
+package com.snowdango.numac.actions.applistdb
 
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 

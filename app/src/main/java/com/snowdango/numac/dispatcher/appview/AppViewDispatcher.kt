@@ -1,9 +1,6 @@
 package com.snowdango.numac.dispatcher.appview
 
-import android.util.Log
-import com.snowdango.numac.actions.applist.AppListAction
-import com.snowdango.numac.actions.database.DatabaseAction
-import com.snowdango.numac.dispatcher.main.MainDispatcher
+import com.snowdango.numac.actions.applistdb.DatabaseAction
 import java.util.*
 
 class AppViewDispatcher {

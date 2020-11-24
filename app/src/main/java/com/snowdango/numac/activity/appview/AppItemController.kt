@@ -1,6 +1,5 @@
 package com.snowdango.numac.activity.appview
 
-import android.content.pm.PackageManager
 import android.view.View
 import com.airbnb.epoxy.TypedEpoxyController
 import com.snowdango.numac.SingletonContext

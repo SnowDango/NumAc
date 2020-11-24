@@ -1,4 +1,4 @@
-package com.snowdango.numac.actions.database
+package com.snowdango.numac.actions.applistdb
 
 import com.snowdango.numac.dispatcher.appview.AppViewDispatcher
 import com.snowdango.numac.domain.usecase.AppListDatabaseUse
@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DatabaseActionCreate(private val coroutineScope: CoroutineScope,private val dispatcher: AppViewDispatcher) {
+class AppListDatabaseActionCreate(private val coroutineScope: CoroutineScope, private val dispatcher: AppViewDispatcher) {
 
     private val appListDatabaseUse: AppListDatabaseUse = AppListDatabaseUse()
 

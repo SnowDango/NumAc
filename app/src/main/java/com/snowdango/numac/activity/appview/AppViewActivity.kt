@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.snowdango.numac.R
-import com.snowdango.numac.actions.database.DatabaseActionCreate
-import com.snowdango.numac.actions.database.DatabaseActionState
+import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreate
+import com.snowdango.numac.actions.applistdb.DatabaseActionState
 import com.snowdango.numac.dispatcher.appview.AppViewDispatcher
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
@@ -18,7 +18,7 @@ class AppViewActivity: AppCompatActivity() {
 
     private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
     private val dispatcher = AppViewDispatcher()
-    private val databaseActionCreate = DatabaseActionCreate(coroutineScope,dispatcher)
+    private val databaseActionCreate = AppListDatabaseActionCreate(coroutineScope,dispatcher)
     private val store = AppViewStore(dispatcher)
 
     override fun onCreate(savedInstanceState: Bundle?) {
