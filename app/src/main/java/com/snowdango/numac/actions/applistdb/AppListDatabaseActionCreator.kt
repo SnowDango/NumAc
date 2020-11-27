@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AppListDatabaseActionCreate(private val coroutineScope: CoroutineScope, private val dispatcher: AppViewDispatcher) {
+class AppListDatabaseActionCreator(private val coroutineScope: CoroutineScope, private val dispatcher: AppViewDispatcher) {
 
     private val appListDatabaseUse: AppListDatabaseUse = AppListDatabaseUse()
 
