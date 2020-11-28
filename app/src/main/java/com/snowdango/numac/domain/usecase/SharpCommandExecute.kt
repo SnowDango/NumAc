@@ -19,7 +19,7 @@ class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
         class Failed(val errorString: String): CommandResult()
     }
 
-    suspend fun executeCommand(command: String): CommandResult {
+    fun executeCommand(command: String): CommandResult {
         return try {
             val commandResult = sharpCommandExec(command)
             when (commandResult.first) {

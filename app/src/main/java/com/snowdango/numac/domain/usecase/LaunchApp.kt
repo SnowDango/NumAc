@@ -12,7 +12,7 @@ class LaunchApp {
         class Failed(val failedState: String): LaunchResult()
     }
 
-    suspend fun launchApplication(command: String,appList: ArrayList<AppInfo>): LaunchResult {
+    fun launchApplication(command: String,appList: ArrayList<AppInfo>): LaunchResult {
         val errorStringList = SingletonContext.applicationContext().resources.getStringArray(R.array.error_log)
         return try {
             val filter = appList.filter { appInfo -> appInfo.command == command }

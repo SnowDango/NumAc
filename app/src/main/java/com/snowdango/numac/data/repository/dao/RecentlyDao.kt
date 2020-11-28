@@ -19,6 +19,9 @@ interface RecentlyDao {
     @Query("delete from `recently-app` where id =:id ")
     fun deleteAt(id: Int)
 
+    @Query("delete from `recently-app` where `package-name`=:packageName")
+    fun deleteAtPackageName(packageName: String)
+
     @Query("select * from `recently-app`")
     fun getAll():List<RecentlyAppInfo>
 
@@ -27,9 +30,14 @@ interface RecentlyDao {
 
 
     fun updateRecently(recentlyAppInfo: RecentlyAppInfo): List<RecentlyAppInfo>{
-        val dataQuantity = getAll().size
-        if(dataQuantity >= 4){
-            deleteAt(getMinId())
+        val data = getAll()
+        val dataQuantity = data.size
+        if(data.none { it.packageName == recentlyAppInfo.packageName }){
+            if(dataQuantity >= 4){
+                deleteAt(getMinId())
+            }
+        }else{
+            deleteAtPackageName(recentlyAppInfo.packageName)
         }
         insert(recentlyAppInfo)
         return getAll()

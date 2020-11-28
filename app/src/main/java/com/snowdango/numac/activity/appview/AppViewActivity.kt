@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.snowdango.numac.R
 import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreator
 import com.snowdango.numac.actions.applistdb.DatabaseActionState
+import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseAction
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionState
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
@@ -29,7 +30,7 @@ class AppViewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appview)
 
-        databaseActionCreate.getExecute()
+        databaseActionCreate.getExecute() // databaseから持ってくる
 
         val appItemController = AppItemController(object : AppItemController.AppClickListener{
             override fun appClickListener(string: String) {
@@ -48,8 +49,11 @@ class AppViewActivity: AppCompatActivity() {
             }
         }
 
-        store.databaseActionData.observe(this, Observer {
-            progressMaterial.visibility = View.GONE
+        observeValue(appItemController)
+    }
+
+    private fun observeValue(appItemController: AppItemController){
+        val databaseObserve =  Observer<DatabaseActionState>{
             when(it){
                 is DatabaseActionState.None -> return@Observer
                 is DatabaseActionState.Failed -> Toast.makeText(this,"miss database",Toast.LENGTH_SHORT).show()
@@ -60,9 +64,9 @@ class AppViewActivity: AppCompatActivity() {
                         recentlyAppDatabaseActionCreator.execute(1,"")
                     }
             }
-        })
+        }
 
-        store.recentlyActionData.observe(this, Observer {
+        val recentlyObserve = Observer<RecentlyAppDatabaseActionState>{
             when(it){
                 is RecentlyAppDatabaseActionState.None -> return@Observer
                 is RecentlyAppDatabaseActionState.Failed -> Toast.makeText(this,"miss database",Toast.LENGTH_SHORT).show()
@@ -71,6 +75,9 @@ class AppViewActivity: AppCompatActivity() {
                         appItemController.setData((store.databaseActionData.value as DatabaseActionState.Success).appList,it.recentlyList)
                     }
             }
-        })
+        }
+
+        store.databaseActionData.observe(this,databaseObserve)
+        store.recentlyActionData.observe(this,recentlyObserve)
     }
 }

@@ -12,12 +12,12 @@ class AppListDatabaseUse() {
         object Failed: DatabaseResult()
     }
 
-    suspend fun appListInsert(appInfoList: ArrayList<AppInfo>){
+    fun appListInsert(appInfoList: ArrayList<AppInfo>){
         val dao = AppDataBase.getDatabase(SingletonContext.applicationContext()).appDao()
         dao.insertAll(appInfoList.toList())
     }
 
-    suspend fun getAppList(): DatabaseResult{
+    fun getAppList(): DatabaseResult{
         return try {
             val dao = AppDataBase.getDatabase(SingletonContext.applicationContext()).appDao()
             val appList = dao.getAppInfoList().toCollection(ArrayList())

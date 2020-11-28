@@ -13,7 +13,7 @@ class SaveRecentlyApp {
     }
 
 
-    suspend fun updateRecentlyAppList(packageName: String): SaveRecentlyAppResult{
+    fun updateRecentlyAppList(packageName: String): SaveRecentlyAppResult{
         return try {
             val dao = AppDataBase.getDatabase(SingletonContext.applicationContext()).recentlyDao()
             val recentlyList: ArrayList<RecentlyAppInfo> = dao.updateRecently(RecentlyAppInfo(null, packageName)).toCollection(ArrayList())
@@ -24,7 +24,7 @@ class SaveRecentlyApp {
 
     }
 
-    suspend fun getRecentlyAppList(): SaveRecentlyAppResult{
+    fun getRecentlyAppList(): SaveRecentlyAppResult{
         return try {
             val dao = AppDataBase.getDatabase(SingletonContext.applicationContext()).recentlyDao()
             val recentlyList: ArrayList<RecentlyAppInfo> = dao.getAll().toCollection(ArrayList<RecentlyAppInfo>())

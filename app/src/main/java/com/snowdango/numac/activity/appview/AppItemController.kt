@@ -20,12 +20,14 @@ class AppItemController(
     }
 
     override fun buildModels(data: ArrayList<AppInfo>?,data2: ArrayList<RecentlyAppInfo>) {
-        Log.d(TAG,data.toString())
         val pm = SingletonContext.applicationContext().packageManager
+
+        // dataが足りないときの一時data
         for (num in 0 until recentlyQuantity.minus(data2.size)) {
             data2.add(RecentlyAppInfo(id = -1, packageName = "no recently"))
         }
-        Log.d(TAG,data2.toString())
+
+        // recentlyのapp
         data2.forEach{ appInfo ->
             appItem {
                 id(appInfo.packageName)
@@ -33,7 +35,6 @@ class AppItemController(
                     val appIntent = pm.getLaunchIntentForPackage(appInfo.packageName)
                     appIcon(appIntent?.let { pm.getActivityIcon(it) })
                     val recentlyApp = data?.filter { it.packageName == appInfo.packageName }
-                    Log.d(TAG,recentlyApp.toString())
                     appName(recentlyApp?.get(0)?.appName)
                     appCommand(recentlyApp?.get(0)?.command)
                     appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName)})
@@ -44,12 +45,14 @@ class AppItemController(
                 }
             }
         }
+
+        // recently以外のapp
         data?.forEach { appInfo ->
             val filterData = data2.filter { it.packageName == appInfo.packageName }
             if(filterData.isEmpty()) {
                 appItem {
-                    id(appInfo.packageName)
                     val appIntent = pm.getLaunchIntentForPackage(appInfo.packageName)
+                    id(appInfo.packageName)
                     appIcon(appIntent?.let { pm.getActivityIcon(it) })
                     appName(appInfo.appName)
                     appCommand(appInfo.command)
@@ -59,11 +62,12 @@ class AppItemController(
         }
     }
 
+
     override fun setData(data1: ArrayList<AppInfo>?, data2: ArrayList<RecentlyAppInfo>?) {
-        if(this.isMultiSpan){
-            requestModelBuild()
+        if(this.isMultiSpan){ // すでにsetDataされていたら
+            requestModelBuild() // Viewの更新　
         }else {
-            super.setData(data1, data2)
+            super.setData(data1, data2) // setData
         }
     }
 
