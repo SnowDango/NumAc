@@ -113,7 +113,6 @@ class MainActivity: AppCompatActivity() {
     // textViewの更新パターン
     private fun checkText(text: String){
         if(text == "clear"){
-            Log.d( TAG , "set please update" )
             textView.text = getString(R.string.please_push_number)
         }else{
             val textStatus = textView.text.toString()
