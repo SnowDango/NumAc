@@ -7,10 +7,10 @@ import com.snowdango.numac.data.repository.dao.entity.AppInfo
 @Dao
 interface AppDao{
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(appInfo: AppInfo)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(appInfoList: List<AppInfo>)
 
     @Update
