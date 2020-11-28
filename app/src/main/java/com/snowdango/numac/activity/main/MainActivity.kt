@@ -20,6 +20,7 @@ import com.snowdango.numac.store.main.MainStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity: AppCompatActivity() {
@@ -82,7 +83,10 @@ class MainActivity: AppCompatActivity() {
             when(it){
                 is CommandActionState.Success -> textView.text = getString(R.string.please_push_number)
                 is CommandActionState.Failed -> errorViewBefore(it.failedState)
-                is CommandActionState.Recreate -> recreate()
+                is CommandActionState.Recreate -> {
+                    textView.text = getString(R.string.change_mode)
+                    recreate()
+                }
                 is CommandActionState.Road -> roadData()
                 is CommandActionState.AppViewIntent -> startActivity(Intent(this,AppViewActivity::class.java))
                 is CommandActionState.None -> return@Observer
@@ -104,7 +108,7 @@ class MainActivity: AppCompatActivity() {
     // error::after
     private fun errorViewAfter(){
         coroutineScope.launch(Dispatchers.Default){
-            Thread.sleep(2000)
+            delay(500)
             textView.text = getString(R.string.please_push_number)
             textView.setTextColor(getColor(R.color.fullactivityText))
         }
@@ -132,7 +136,6 @@ class MainActivity: AppCompatActivity() {
                     command,
                     (store.appListActionData.value as AppListActionState.Success).appList
             )
-        Log.d( TAG , "set please command" )
         textView.text = getString(R.string.please_push_number)
     }
 

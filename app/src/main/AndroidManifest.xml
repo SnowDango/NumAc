@@ -31,7 +31,9 @@
         </activity>
 
         <activity android:name=".activity.appview.AppViewActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
         </activity>
     </application>
 
