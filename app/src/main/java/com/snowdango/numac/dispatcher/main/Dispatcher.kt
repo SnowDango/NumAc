@@ -5,7 +5,7 @@ import com.snowdango.numac.actions.applist.AppListAction
 import com.snowdango.numac.actions.command.CommandAction
 import java.util.*
 
-class MainDispatcher {
+class Dispatcher {
 
     private val appListListeners = Collections.synchronizedList(mutableListOf<AppListActionListener>())
     private val commandListeners = Collections.synchronizedList(mutableListOf<CommandActionListener>())

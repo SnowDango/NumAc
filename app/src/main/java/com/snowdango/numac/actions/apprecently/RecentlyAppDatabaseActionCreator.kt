@@ -1,13 +1,17 @@
 package com.snowdango.numac.actions.apprecently
 
 import android.util.Log
-import com.snowdango.numac.dispatcher.appview.AppViewDispatcher
+import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.domain.usecase.SaveRecentlyApp
-import kotlinx.coroutines.CoroutineScope
+import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RecentlyAppDatabaseActionCreator(private val coroutineScope: CoroutineScope, private val appViewDispatcher: AppViewDispatcher) {
+class RecentlyAppDatabaseActionCreator(
+        private val coroutineScope: CancellableCoroutineScope,
+        private val dispatcher: Dispatcher,
+        private val saveRecentlyApp: SaveRecentlyApp
+) {
 
     fun execute(mode: Int,packageName: String){
         coroutineScope.launch(Dispatchers.Default){
@@ -21,24 +25,24 @@ class RecentlyAppDatabaseActionCreator(private val coroutineScope: CoroutineScop
 
     private suspend fun updateRecentlyApp(packageName: String){
         val actionState =
-                when(val result = SaveRecentlyApp().updateRecentlyAppList(packageName)){
+                when(val result = saveRecentlyApp.updateRecentlyAppList(packageName)){
                     is SaveRecentlyApp.SaveRecentlyAppResult.Success ->  RecentlyAppDatabaseActionState.Success(result.recentlyAppList)
                     is SaveRecentlyApp.SaveRecentlyAppResult.Failed -> RecentlyAppDatabaseActionState.Failed
                 }
 
         coroutineScope.launch(Dispatchers.Main) {
-            appViewDispatcher.dispatchRecently(RecentlyAppDatabaseAction(actionState))
+            dispatcher.dispatchRecently(RecentlyAppDatabaseAction(actionState))
         }
     }
 
     private suspend fun getRecentlyApp(){
         val actionState =
-                when(val result = SaveRecentlyApp().getRecentlyAppList()){
+                when(val result = saveRecentlyApp.getRecentlyAppList()){
                     is SaveRecentlyApp.SaveRecentlyAppResult.Success -> RecentlyAppDatabaseActionState.Success(result.recentlyAppList)
                     is SaveRecentlyApp.SaveRecentlyAppResult.Failed -> RecentlyAppDatabaseActionState.Failed
                 }
         Log.d("getRecently",actionState.toString())
         coroutineScope.launch(Dispatchers.Main){
-            appViewDispatcher.dispatchRecently(RecentlyAppDatabaseAction(actionState))
+            dispatcher.dispatchRecently(RecentlyAppDatabaseAction(actionState))
         }
     }}

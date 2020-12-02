@@ -7,12 +7,13 @@ import com.snowdango.numac.actions.applistdb.DatabaseAction
 import com.snowdango.numac.actions.applistdb.DatabaseActionState
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseAction
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionState
-import com.snowdango.numac.dispatcher.appview.AppViewDispatcher
+import com.snowdango.numac.dispatcher.Dispatcher
 
-class AppViewStore(private val appViewDispatcher: AppViewDispatcher): ViewModel(), AppViewDispatcher.DatabaseActionListener, AppViewDispatcher.RecentlyActionListener {
+class AppViewStore(private val dispatcher: Dispatcher):
+        ViewModel(), Dispatcher.DatabaseActionListener, Dispatcher.RecentlyActionListener {
 
     init {
-        appViewDispatcher.register(this,this)
+        dispatcher.registerAppView(this,this)
     }
 
     val databaseActionData: LiveData<DatabaseActionState> = MutableLiveData<DatabaseActionState>().apply { value = DatabaseActionState.None }
@@ -33,7 +34,7 @@ class AppViewStore(private val appViewDispatcher: AppViewDispatcher): ViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        appViewDispatcher.unregister(this,this)
+        dispatcher.unregisterAppView(this,this)
     }
 
 }

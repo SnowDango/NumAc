@@ -24,6 +24,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:indeterminate="true"
+        android:visibility="invisible"
         app:mpb_progressStyle="horizontal"
         style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         app:layout_constraintTop_toBottomOf="@id/textView"

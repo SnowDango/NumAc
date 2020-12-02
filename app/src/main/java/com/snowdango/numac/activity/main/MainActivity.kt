@@ -15,49 +15,59 @@ import com.snowdango.numac.actions.applist.AppListActionState
 import com.snowdango.numac.actions.command.CommandActionCreator
 import com.snowdango.numac.actions.command.CommandActionState
 import com.snowdango.numac.activity.appview.AppViewActivity
-import com.snowdango.numac.dispatcher.main.MainDispatcher
 import com.snowdango.numac.store.main.MainStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class MainActivity: AppCompatActivity() {
 
     private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
-    private val dispatcher = MainDispatcher()
-    private val appListActionCreator: AppListActionCreator = AppListActionCreator(coroutineScope, dispatcher)
-    private val commandActionCreator: CommandActionCreator = CommandActionCreator(coroutineScope, dispatcher)
-    private val store: MainStore = MainStore(dispatcher)
+    private val appListActionCreator: AppListActionCreator by inject{parametersOf(coroutineScope)}
+    private val commandActionCreator: CommandActionCreator by inject{parametersOf(coroutineScope)}
+    private val store: MainStore by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        roadData()
+        //ViewModelがリストを持っていた場合
+        if(store.appListActionData.value !is AppListActionState.Success){
+            progressMaterialHorizontal.visibility = View.INVISIBLE
+            loadData()
+        }
 
+        // epoxy関係
         val mainButtonController = MainButtonController( object : MainButtonController.ClickListener{
             override fun itemClickListener(string: String) {
                 checkText(string)
             }
         })
-
         recyclerViewMain.apply {
             adapter = mainButtonController.adapter
             layoutManager = GridLayoutManager(applicationContext, 3).apply {
                 orientation = GridLayoutManager.VERTICAL
             }
         }
-
         mainButtonController.setData(resources.getStringArray(R.array.button_string))
+
+        // ViewModelのobserver
         observeValue()
     }
 
     // dataの取得
-    private fun roadData(){
+    private fun loadData(){
         appListActionCreator.execute()
         textView.text = getString(R.string.wait_text)
         progressMaterialHorizontal.visibility = View.VISIBLE
+    }
+
+    override fun onResume() {
+        loadData()
+        super.onResume()
     }
 
     override fun onDestroy() {
@@ -82,17 +92,14 @@ class MainActivity: AppCompatActivity() {
             when(it){
                 is CommandActionState.Success -> textView.text = getString(R.string.please_push_number)
                 is CommandActionState.Failed -> errorViewBefore(it.failedState)
-                is CommandActionState.Recreate -> recreate()
-                is CommandActionState.Road -> roadData()
+                is CommandActionState.Road -> loadData()
                 is CommandActionState.AppViewIntent -> startActivity(Intent(this,AppViewActivity::class.java))
                 is CommandActionState.None -> return@Observer
             }
         }
-
         store.appListActionData.observe(this, appListActionDataObserver)
         store.commandActionData.observe(this, commandActionDataObserver)
     }
-
 
     // error::before
     private fun errorViewBefore(errorString: String){
@@ -104,7 +111,7 @@ class MainActivity: AppCompatActivity() {
     // error::after
     private fun errorViewAfter(){
         coroutineScope.launch(Dispatchers.Default){
-            Thread.sleep(2000)
+            delay(500)
             textView.text = getString(R.string.please_push_number)
             textView.setTextColor(getColor(R.color.fullactivityText))
         }
@@ -112,9 +119,10 @@ class MainActivity: AppCompatActivity() {
 
     // textViewの更新パターン
     private fun checkText(text: String){
+        Log.d(TAG,textView.text.toString().length.toString())
         if(text == "clear"){
-            Log.d( TAG , "set please update" )
-            textView.text = getString(R.string.please_push_number)
+            if(textView.text.length <= 3)
+                textView.text = getString(R.string.please_push_number)
         }else{
             val textStatus = textView.text.toString()
             when{
@@ -128,13 +136,16 @@ class MainActivity: AppCompatActivity() {
 
     // commandの実行
     private fun commandExec(command: String){
+        textView.text = command
         if(store.appListActionData.value is AppListActionState.Success)
             commandActionCreator.execute(
                     command,
                     (store.appListActionData.value as AppListActionState.Success).appList
             )
-        Log.d( TAG , "set please command" )
-        textView.text = getString(R.string.please_push_number)
+        coroutineScope.launch(Dispatchers.Default) {
+            delay(200)
+            textView.text = getString(R.string.please_push_number)
+        }
     }
 
     companion object{

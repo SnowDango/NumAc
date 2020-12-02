@@ -22,7 +22,7 @@ interface RecentlyDao {
     @Query("delete from `recently-app` where `package-name`=:packageName")
     fun deleteAtPackageName(packageName: String)
 
-    @Query("select * from `recently-app`")
+    @Query("select * from `recently-app` order by id desc")
     fun getAll():List<RecentlyAppInfo>
 
     @Query("select min(id) from `recently-app`")

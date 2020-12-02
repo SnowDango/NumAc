@@ -5,7 +5,7 @@ import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseAction
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
 import java.util.*
 
-class AppViewDispatcher {
+class Dispatcher {
 
     private val databaseListeners = Collections.synchronizedList(mutableListOf<DatabaseActionListener>())
     private val recentlyListeners = Collections.synchronizedList(mutableListOf<RecentlyActionListener>())
@@ -28,6 +28,7 @@ class AppViewDispatcher {
     fun register(listener: DatabaseActionListener, listener2: RecentlyActionListener) {
         databaseListeners.add(listener)
         recentlyListeners.add(listener2)
+
     }
 
     fun unregister(listener: DatabaseActionListener, listener2: RecentlyActionListener) {

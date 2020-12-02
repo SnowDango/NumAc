@@ -2,7 +2,7 @@ package com.snowdango.numac.domain.usecase
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import com.snowdango.numac.SingletonContext
+import com.snowdango.numac.NumApp
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 
 class AppListCreate {
@@ -14,8 +14,7 @@ class AppListCreate {
 
     fun listCreate(): CreateResult{
         try {
-            val context = SingletonContext.applicationContext()
-            val pm = context.packageManager
+            val pm =  NumApp.singletonContext().packageManager
             val pckInfoList: List<PackageInfo> = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES)
             val appInfoList: ArrayList<AppInfo> = ArrayList()
             val commandAlreadyList: ArrayList<String> = ArrayList()
