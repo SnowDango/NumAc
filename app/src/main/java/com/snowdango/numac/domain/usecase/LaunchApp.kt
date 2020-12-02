@@ -1,7 +1,7 @@
 package com.snowdango.numac.domain.usecase
 
 import com.snowdango.numac.R
-import com.snowdango.numac.SingletonContext
+import com.snowdango.numac.NumApp
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import java.lang.Exception
 
@@ -13,14 +13,14 @@ class LaunchApp {
     }
 
     fun launchApplication(command: String,appList: ArrayList<AppInfo>): LaunchResult {
-        val errorStringList = SingletonContext.applicationContext().resources.getStringArray(R.array.error_log)
+        val errorStringList = NumApp.singletonContext().resources.getStringArray(R.array.error_log)
         return try {
             val filter = appList.filter { appInfo -> appInfo.command == command }
-            val pm = SingletonContext.applicationContext().packageManager
+            val pm = NumApp.singletonContext().packageManager
             if (filter.isNotEmpty()) {
                 val intent = pm.getLaunchIntentForPackage(filter[0].packageName)
                 if (intent != null) {
-                    SingletonContext.applicationContext().startActivity(intent)
+                    NumApp.singletonContext().startActivity(intent)
                     LaunchResult.Success
                 } else LaunchResult.Failed(errorStringList[2])
             } else LaunchResult.Failed(errorStringList[1])

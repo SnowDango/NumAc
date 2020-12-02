@@ -8,13 +8,13 @@ import com.snowdango.numac.actions.applist.AppListAction
 import com.snowdango.numac.actions.applist.AppListActionState
 import com.snowdango.numac.actions.command.CommandAction
 import com.snowdango.numac.actions.command.CommandActionState
-import com.snowdango.numac.dispatcher.main.MainDispatcher
+import com.snowdango.numac.dispatcher.Dispatcher
 
-class MainStore(private val mainDispatcher: MainDispatcher):
-        ViewModel(), MainDispatcher.AppListActionListener,MainDispatcher.CommandActionListener{
+class MainStore(private val dispatcher: Dispatcher):
+        ViewModel(), Dispatcher.AppListActionListener,Dispatcher.CommandActionListener{
 
     init {
-        mainDispatcher.register(this,this)
+        dispatcher.registerMain(this,this)
     }
 
     val appListActionData: LiveData<AppListActionState> = MutableLiveData<AppListActionState>().apply { value = AppListActionState.None }
@@ -34,7 +34,7 @@ class MainStore(private val mainDispatcher: MainDispatcher):
 
     override fun onCleared() {
         super.onCleared()
-        mainDispatcher.unregister(this,this)
+        dispatcher.unregisterMain(this,this)
     }
 
     override fun on(action: CommandAction) = updateCommand(action)

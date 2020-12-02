@@ -12,18 +12,19 @@ import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreator
 import com.snowdango.numac.actions.applistdb.DatabaseActionState
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionState
-import com.snowdango.numac.dispatcher.appview.AppViewDispatcher
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.android.synthetic.main.activity_appview.*
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class AppViewActivity: AppCompatActivity() {
 
     private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
-    private val dispatcher = AppViewDispatcher()
-    private val databaseActionCreate = AppListDatabaseActionCreator(coroutineScope,dispatcher)
-    private val recentlyAppDatabaseActionCreator = RecentlyAppDatabaseActionCreator(coroutineScope,dispatcher)
-    private val store = AppViewStore(dispatcher)
+    private val databaseActionCreate: AppListDatabaseActionCreator by inject{ parametersOf(coroutineScope)}
+    private val recentlyAppDatabaseActionCreator: RecentlyAppDatabaseActionCreator by inject{ parametersOf(coroutineScope)}
+    private val store: AppViewStore by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,14 +41,15 @@ class AppViewActivity: AppCompatActivity() {
                 }
             }
         })
-
         recyclerViewApp.apply {
             adapter = appItemController.adapter
             layoutManager = GridLayoutManager(applicationContext, 4).apply {
                 orientation = GridLayoutManager.VERTICAL
             }
         }
+        // search View のCallBack
         searchCallback(appItemController)
+        // observerの設定
         observeValue(appItemController)
     }
 
@@ -65,7 +67,6 @@ class AppViewActivity: AppCompatActivity() {
                     }
             }
         }
-
         val recentlyObserve = Observer<RecentlyAppDatabaseActionState>{
             when(it){
                 is RecentlyAppDatabaseActionState.None -> return@Observer

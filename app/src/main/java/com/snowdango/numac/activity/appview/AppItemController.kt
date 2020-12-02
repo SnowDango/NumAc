@@ -3,7 +3,7 @@ package com.snowdango.numac.activity.appview
 import android.view.View
 import com.airbnb.epoxy.Typed3EpoxyController
 import com.snowdango.numac.R
-import com.snowdango.numac.SingletonContext
+import com.snowdango.numac.NumApp
 import com.snowdango.numac.appItem
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
@@ -19,7 +19,7 @@ class AppItemController(
     }
 
     override fun buildModels(data: ArrayList<AppInfo>?,data2: ArrayList<RecentlyAppInfo>,data3:Boolean) {
-        val pm = SingletonContext.applicationContext().packageManager
+        val pm = NumApp.singletonContext().packageManager
 
         if(data3) {
             // dataが足りないときの一時data
@@ -39,7 +39,7 @@ class AppItemController(
                         appCommand(recentlyApp?.get(0)?.command)
                         appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
                     } else {
-                        appIcon(SingletonContext.applicationContext().getDrawable(R.drawable.ic_android_black_108dp))
+                        appIcon(NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp))
                         appName(appInfo.packageName)
                         appCommand(StringBuilder().toString())
                     }

@@ -1,6 +1,6 @@
 package com.snowdango.numac.domain.usecase
 
-import com.snowdango.numac.SingletonContext
+import com.snowdango.numac.NumApp
 import com.snowdango.numac.data.repository.AppDataBase
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
 
@@ -15,7 +15,7 @@ class SaveRecentlyApp {
 
     fun updateRecentlyAppList(packageName: String): SaveRecentlyAppResult{
         return try {
-            val dao = AppDataBase.getDatabase(SingletonContext.applicationContext()).recentlyDao()
+            val dao = AppDataBase.getDatabase(NumApp.singletonContext()).recentlyDao()
             val recentlyList: ArrayList<RecentlyAppInfo> = dao.updateRecently(RecentlyAppInfo(null, packageName)).toCollection(ArrayList())
             SaveRecentlyAppResult.Success(recentlyList)
         }catch (e: Exception){
@@ -26,7 +26,7 @@ class SaveRecentlyApp {
 
     fun getRecentlyAppList(): SaveRecentlyAppResult{
         return try {
-            val dao = AppDataBase.getDatabase(SingletonContext.applicationContext()).recentlyDao()
+            val dao = AppDataBase.getDatabase(NumApp.singletonContext()).recentlyDao()
             val recentlyList: ArrayList<RecentlyAppInfo> = dao.getAll().toCollection(ArrayList<RecentlyAppInfo>())
             SaveRecentlyAppResult.Success(recentlyList)
         }catch (e: Exception){

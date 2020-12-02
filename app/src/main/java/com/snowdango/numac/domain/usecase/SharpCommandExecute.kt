@@ -2,13 +2,18 @@ package com.snowdango.numac.domain.usecase
 
 import androidx.appcompat.app.AppCompatDelegate
 import com.snowdango.numac.R
-import com.snowdango.numac.SingletonContext
-import com.snowdango.numac.actions.command.CommandAction
-import com.snowdango.numac.actions.command.CommandActionState
+import com.snowdango.numac.NumApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+
+enum class CommandList{
+    ChangeView,
+    LaunchAppView,
+    RoadAppList,
+    Error
+}
 
 class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
 
@@ -17,33 +22,33 @@ class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
         object Road: CommandResult()
         object AppViewIntent: CommandResult()
         class Failed(val errorString: String): CommandResult()
+        object None: CommandResult()
     }
 
     fun executeCommand(command: String): CommandResult {
         return try {
-            val commandResult = sharpCommandExec(command)
-            when (commandResult.first) {
-                0 -> CommandResult.Recreate
-                1 -> CommandResult.AppViewIntent
-                2 -> CommandResult.Road
-                else -> CommandResult.Failed(commandResult.second)
+            when (sharpCommandExec(command)) {
+                CommandList.ChangeView -> CommandResult.Recreate
+                CommandList.LaunchAppView -> CommandResult.AppViewIntent
+                CommandList.RoadAppList -> CommandResult.Road
+                CommandList.Error -> CommandResult.Failed("NotFoundCommand")
             }
         }catch (e: Exception){
             CommandResult.Failed("Exception")
         }
     }
 
-    private fun sharpCommandExec(command: String): Pair<Int,String>{
-        val sharpCommandList = SingletonContext.applicationContext().resources.getStringArray(R.array.sharp_command)
+    private fun sharpCommandExec(command: String): CommandList{
+        val sharpCommandList = NumApp.singletonContext().resources.getStringArray(R.array.sharp_command)
         return when(command){
             sharpCommandList[0] -> changeViewMode()
             sharpCommandList[1] -> launchAppView()
             sharpCommandList[2] -> roadAppList()
-            else -> Pair(-1 ,"Not Found Sharp Command")
+            else -> CommandList.Error
         }
     }
 
-    private fun changeViewMode(): Pair<Int,String>{
+    private fun changeViewMode(): CommandList{
         return try {
             coroutineScope.launch(Dispatchers.Main) {
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
@@ -52,17 +57,17 @@ class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
             }
-            Pair(0,"")
+            CommandList.ChangeView
         }catch (e: Exception){
-            Pair(-1,"Exception")
+            CommandList.Error
         }
     }
 
-    private fun roadAppList(): Pair<Int,String>{
-        return Pair(2,"")
+    private fun roadAppList(): CommandList{
+        return CommandList.RoadAppList
     }
 
-    private fun launchAppView():Pair<Int,String>{
-        return Pair(1,"")
+    private fun launchAppView(): CommandList{
+        return CommandList.LaunchAppView
     }
 }
