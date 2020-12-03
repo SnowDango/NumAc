@@ -110,10 +110,10 @@ class MainActivity: AppCompatActivity() {
 
     // error::after
     private fun errorViewAfter(){
-        coroutineScope.launch(Dispatchers.Default){
+        coroutineScope.launch(Dispatchers.Main){
             delay(500)
-            textView.text = getString(R.string.please_push_number)
             textView.setTextColor(getColor(R.color.fullactivityText))
+            textView.text = getString(R.string.please_push_number)
         }
     }
 
@@ -142,10 +142,6 @@ class MainActivity: AppCompatActivity() {
                     command,
                     (store.appListActionData.value as AppListActionState.Success).appList
             )
-        coroutineScope.launch(Dispatchers.Default) {
-            delay(200)
-            textView.text = getString(R.string.please_push_number)
-        }
     }
 
     companion object{
