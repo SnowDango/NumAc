@@ -30,8 +30,6 @@ class AppViewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appview)
 
-        databaseActionCreate.getExecute() // databaseから持ってくる
-
         val appItemController = AppItemController(object : AppItemController.AppClickListener{
             override fun appClickListener(string: String) {
                 val intent = packageManager.getLaunchIntentForPackage(string)
@@ -51,6 +49,11 @@ class AppViewActivity: AppCompatActivity() {
         searchCallback(appItemController)
         // observerの設定
         observeValue(appItemController)
+    }
+
+    override fun onStart() {
+        databaseActionCreate.getExecute() // databaseから持ってくる
+        super.onStart()
     }
 
     private fun observeValue(appItemController: AppItemController){
