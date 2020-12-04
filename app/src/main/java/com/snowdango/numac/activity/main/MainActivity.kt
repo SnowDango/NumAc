@@ -34,7 +34,7 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //ViewModelがリストを持っていた場合
+        //ViewModelがリストを持っていなかった場合
         if(store.appListActionData.value !is AppListActionState.Success){
             progressMaterialHorizontal.visibility = View.INVISIBLE
             loadData()
@@ -90,7 +90,10 @@ class MainActivity: AppCompatActivity() {
 
         val commandActionDataObserver  = Observer<CommandActionState> {
             when(it){
-                is CommandActionState.Success -> textView.text = getString(R.string.please_push_number)
+                is CommandActionState.Success -> {
+                    startActivity(it.intent)
+                    textView.text = getString(R.string.please_push_number)
+                }
                 is CommandActionState.Failed -> errorViewBefore(it.failedState)
                 is CommandActionState.Road -> loadData()
                 is CommandActionState.AppViewIntent -> startActivity(Intent(this,AppViewActivity::class.java))

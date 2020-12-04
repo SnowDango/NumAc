@@ -32,9 +32,9 @@ class CommandActionCreator(
             else -> sharpCommandExecute.executeCommand(command)
         }
         val action: CommandAction = when(result) {
-            is LaunchApp.LaunchResult.Success -> CommandAction(CommandActionState.Success)
+            is LaunchApp.LaunchResult.Success -> CommandAction(CommandActionState.Success(result.intent))
             is LaunchApp.LaunchResult.Failed -> CommandAction(CommandActionState.Failed(result.failedState))
-            is SharpCommandExecute.CommandResult.Recreate -> CommandAction(CommandActionState.Success)
+            is SharpCommandExecute.CommandResult.Recreate -> CommandAction(CommandActionState.None)
             is SharpCommandExecute.CommandResult.Road -> CommandAction(CommandActionState.Road)
             is SharpCommandExecute.CommandResult.AppViewIntent -> CommandAction(CommandActionState.AppViewIntent)
             is SharpCommandExecute.CommandResult.Failed -> CommandAction(CommandActionState.Failed(result.errorString))
