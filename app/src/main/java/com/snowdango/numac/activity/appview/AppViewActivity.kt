@@ -127,14 +127,12 @@ class AppViewActivity: AppCompatActivity() {
                 appItemController.setData(
                         (store.databaseActionData.value as DatabaseActionState.Success).appList,
                         (store.recentlyActionData.value as RecentlyAppDatabaseActionState.Success).recentlyList,
-                        true
-                )
+                        true)
             }else{
                 appItemController.setData(
                         (store.databaseActionData.value as DatabaseActionState.Success).appList,
                         arrayListOf(),
-                        false
-                )
+                        false)
             }
             progressMaterial.visibility = View.GONE
         }

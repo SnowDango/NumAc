@@ -1,7 +1,6 @@
 package com.snowdango.numac.domain.usecase
 
 import android.content.Intent
-import android.util.Log
 import com.snowdango.numac.R
 import com.snowdango.numac.NumApp
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
@@ -18,7 +17,6 @@ class LaunchApp {
         val errorStringList = NumApp.singletonContext().resources.getStringArray(R.array.error_log)
         return try {
             val filter = appList.filter { appInfo -> appInfo.command == command }
-            Log.d("launchApp", filter.toString())
             val pm = NumApp.singletonContext().packageManager
             if (filter.isNotEmpty()) {
                 val intent = pm.getLaunchIntentForPackage(filter[0].packageName)
