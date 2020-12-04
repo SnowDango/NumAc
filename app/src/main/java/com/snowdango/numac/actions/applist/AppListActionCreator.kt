@@ -27,7 +27,10 @@ class AppListActionCreator(
                 coroutineScope.launch(Dispatchers.IO){
                     appListDatabaseUse.appListInsert(actionResult.listAppList)
                 }
-                AppListAction(AppListActionState.Success(actionResult.listAppList))
+                when(val getResult = appListDatabaseUse.getAppList()){
+                    is AppListDatabaseUse.DatabaseResult.Success -> AppListAction(AppListActionState.Success(getResult.appList))
+                    is AppListDatabaseUse.DatabaseResult.Failed -> AppListAction(AppListActionState.Failed)
+                }
             }
             is AppListCreate.CreateResult.Failed -> AppListAction(AppListActionState.Failed)
         }
