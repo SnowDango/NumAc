@@ -7,6 +7,7 @@
     <string name="hint">Please enter the name you want to search</string>
     <string name="undefined_app">Undefined Application</string>
     <string name="create_by_snowdango">create by SnowDango</string>
+    <string name="replace_after_command">replace after command</string>
 
     <string-array name="button_string">
         <item>1</item>

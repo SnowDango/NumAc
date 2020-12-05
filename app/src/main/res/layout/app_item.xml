@@ -8,6 +8,7 @@
         <variable name="appCommand" type="String" />
         <variable name="appIcon" type="android.graphics.drawable.Drawable" />
         <variable name="appOnClickListener" type="android.view.View.OnClickListener" />
+        <variable name="appOnLongClickListener" type="android.view.View.OnLongClickListener" />
     </data>
 
     <LinearLayout
@@ -17,7 +18,8 @@
         android:orientation="vertical"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{appOnClickListener}">
+        android:onClick="@{appOnClickListener}"
+        android:onLongClick="@{appOnLongClickListener}">
 
         <TextView
             android:id="@+id/appCommandView"
@@ -35,7 +37,7 @@
             android:layout_gravity="center"
             android:background="#00000000"
             app:ari_ratio="0.8"
-            android:src="@{appIcon}"/>
+            android:src="@{appIcon}" />
 
         <TextView
             android:id="@+id/appNameView"
@@ -45,6 +47,6 @@
             android:textAlignment="center"
             android:autoSizeTextType="uniform"
             android:text="@{appName}"
-            android:maxLines="1"/>
+            android:maxLines="1" />
     </LinearLayout>
 </layout>
