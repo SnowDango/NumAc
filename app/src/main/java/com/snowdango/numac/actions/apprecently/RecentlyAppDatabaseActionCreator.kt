@@ -13,12 +13,15 @@ class RecentlyAppDatabaseActionCreator(
         private val saveRecentlyApp: SaveRecentlyApp
 ) {
 
-    fun execute(mode: Int,packageName: String){
+    fun executeUpdate(packageName: String){
         coroutineScope.launch(Dispatchers.Default){
-            when(mode) {
-                0 -> updateRecentlyApp(packageName)
-                1 -> getRecentlyApp()
-            }
+            updateRecentlyApp(packageName)
+        }
+    }
+
+    fun executeGet(){
+        coroutineScope.launch(Dispatchers.IO) {
+            getRecentlyApp()
         }
     }
 
@@ -29,7 +32,6 @@ class RecentlyAppDatabaseActionCreator(
                     is SaveRecentlyApp.SaveRecentlyAppResult.Success ->  RecentlyAppDatabaseActionState.Success(result.recentlyAppList)
                     is SaveRecentlyApp.SaveRecentlyAppResult.Failed -> RecentlyAppDatabaseActionState.Failed
                 }
-
         coroutineScope.launch(Dispatchers.Main) {
             dispatcher.dispatchRecently(RecentlyAppDatabaseAction(actionState))
         }

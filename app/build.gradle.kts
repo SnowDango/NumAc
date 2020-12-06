@@ -1,8 +1,15 @@
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.kotlin
+import org.gradle.kotlin.dsl.repositories
+import org.gradle.kotlin.dsl.*
+import dependencies.Dep
+
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("android.extensions")
     id("kotlin-kapt")
+    id("com.google.gms.oss.licenses.plugin")
 }
 
 android {
@@ -18,6 +25,8 @@ android {
     }
 
     buildTypes {
+        getByName("debug"){
+        }
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -27,46 +36,57 @@ android {
         sourceCompatibility =  JavaVersion.VERSION_1_8
         targetCompatibility =  JavaVersion.VERSION_1_8
     }
-    dataBinding.isEnabled = true
+    buildFeatures.dataBinding = true
 }
 
 dependencies {
+    // local lib
     implementation(fileTree(mapOf("dir" to "libs", "include" to arrayOf("*.jar"))))
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    testImplementation("junit:junit:4.13.1")
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
-    implementation("androidx.core:core-ktx:1.3.2")
 
-    // epoxy
-    implementation("com.airbnb.android:epoxy:4.1.0")
-    kapt("com.airbnb.android:epoxy-processor:4.1.0")
-    implementation("com.airbnb.android:epoxy-databinding:4.1.0")
+    //ossLicenses
+    implementation(Dep.GoogleGMS.ossLicenses)
 
-    // recyclerview
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
-
-    //progressbar
-    implementation("me.zhanghai.android.materialprogressbar:library:1.6.1")
-
-    // coroutine
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-
+    // AndroidX
+    implementation(Dep.AndroidX.appCompat)
+    implementation(Dep.AndroidX.constraintLayout)
+    implementation(Dep.AndroidX.lifecycle)
+    implementation(Dep.AndroidX.core)
+    //recyclerview
+    implementation(Dep.AndroidX.recyclerView)
     //room
-    implementation("androidx.room:room-runtime:2.2.5")
-    implementation("androidx.room:room-ktx:2.2.5")
-    kapt("androidx.room:room-compiler:2.2.5")
+    implementation(Dep.AndroidX.roomRuntime)
+    implementation(Dep.AndroidX.roomKtx)
+    kapt(Dep.AndroidX.roomCompiler)
 
-    // image view
-    implementation("com.github.santalu:aspect-ratio-imageview:1.0.9")
+    //test
+    testImplementation(Dep.Junit.junit)
+    androidTestImplementation(Dep.AndroidX.testExt)
+    androidTestImplementation(Dep.AndroidX.testEspresso)
+
+    //kotlinX
+    implementation(Dep.KotlinX.coroutine)
 
     //koin
-    implementation("org.koin:koin-android:2.0.1")
-    implementation("org.koin:koin-android-scope:2.0.1")
-    implementation("org.koin:koin-android-viewmodel:2.0.1")
+    implementation(Dep.Koin.koin)
+    implementation(Dep.Koin.koinScope)
+    implementation(Dep.Koin.koinViewModel)
 
+    // epoxy
+    implementation(Dep.Airbnb.epoxy)
+    kapt(Dep.Airbnb.epoxyProcessor)
+    implementation(Dep.Airbnb.epoxyDataBinding)
+
+    //MaterialProgressBar
+    implementation(Dep.Zhanghai.materialProgressBar)
+
+    //MaterialPopupMenu
+    implementation(Dep.Zawadz88.materialPopupMenu)
+
+    //AspectRatioImageView
+    implementation(Dep.Santalu.aspectRatioImageView)
+
+    //materialDialog
+    implementation(Dep.Afollestad.materialDialogInput)
 }
 repositories {
     mavenCentral()
