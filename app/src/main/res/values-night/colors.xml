@@ -20,4 +20,7 @@
     <color name="replaceButtonBackground">#ffffff</color>
     <color name="replaceButtonText">#000000</color>
 
+    <color name="dialog_button_enable">#AAFFFFFF</color>
+    <color name="dialog_button_false">#AA000000</color>
+
 </resources>

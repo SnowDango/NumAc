@@ -10,12 +10,11 @@ import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
 
 
-@Database(entities = [AppInfo::class, RecentlyAppInfo::class], version = 1)
+@Database(entities = [AppInfo::class, RecentlyAppInfo::class], version = 1, exportSchema = false)
 abstract class AppDataBase: RoomDatabase() {
 
     abstract fun appDao(): AppDao
     abstract fun recentlyDao(): RecentlyDao
-
 
     companion object {
         @Volatile private var INSTANCE: AppDataBase? = null

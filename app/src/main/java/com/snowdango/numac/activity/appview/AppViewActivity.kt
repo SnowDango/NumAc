@@ -1,6 +1,9 @@
 package com.snowdango.numac.activity.appview
 
+import android.Manifest
+import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -11,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.github.zawadz88.materialpopupmenu.popupMenu
 import com.snowdango.numac.R
@@ -24,7 +30,11 @@ import kotlinx.android.synthetic.main.activity_appview.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnPermissionDenied
+import permissions.dispatcher.RuntimePermissions
 
+@RuntimePermissions
 class AppViewActivity: AppCompatActivity() {
 
     private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
@@ -73,12 +83,10 @@ class AppViewActivity: AppCompatActivity() {
                 is DatabaseActionState.None -> return@Observer
                 is DatabaseActionState.Failed -> Toast.makeText(this, "miss database", Toast.LENGTH_SHORT).show()
                 is DatabaseActionState.Success ->
-                    if (store.recentlyActionData.value is RecentlyAppDatabaseActionState.Success) {
-                        progressMaterial.visibility = View.GONE
+                    if (store.recentlyActionData.value is RecentlyAppDatabaseActionState.Success)
                         appItemController.setData(it.appList, (store.recentlyActionData.value as RecentlyAppDatabaseActionState.Success).recentlyList, true)
-                    } else {
+                     else
                         recentlyAppDatabaseActionCreator.executeGet()
-                    }
             }
         }
         val recentlyObserve = Observer<RecentlyAppDatabaseActionState> {
@@ -86,10 +94,8 @@ class AppViewActivity: AppCompatActivity() {
                 is RecentlyAppDatabaseActionState.None -> return@Observer
                 is RecentlyAppDatabaseActionState.Failed -> Toast.makeText(this, "miss database", Toast.LENGTH_SHORT).show()
                 is RecentlyAppDatabaseActionState.Success ->
-                    if (store.databaseActionData.value is DatabaseActionState.Success) {
-                        progressMaterial.visibility = View.GONE
+                    if (store.databaseActionData.value is DatabaseActionState.Success)
                         appItemController.setData((store.databaseActionData.value as DatabaseActionState.Success).appList, it.recentlyList, true)
-                    }
             }
         }
 
@@ -104,7 +110,6 @@ class AppViewActivity: AppCompatActivity() {
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                progressMaterial.visibility = View.VISIBLE
                 p0?.let {
                     if (it != StringBuilder().toString()) {
                         searchFilter(p0, appItemController)
@@ -128,7 +133,6 @@ class AppViewActivity: AppCompatActivity() {
                         arrayListOf(),
                         false
                 )
-                progressMaterial.visibility = View.GONE
             }
         }
     }
@@ -146,11 +150,10 @@ class AppViewActivity: AppCompatActivity() {
                         arrayListOf(),
                         false)
             }
-            progressMaterial.visibility = View.GONE
         }
     }
 
-    private fun setPopupMenu(appIcon: Drawable,appName:String,packageName: String,command: String,view: View) {
+    private fun setPopupMenu(appIcon: Drawable, appName:String, packageName: String, command: String, view: View) {
         val popupMenu = popupMenu {
             section {
                 item {
@@ -161,10 +164,22 @@ class AppViewActivity: AppCompatActivity() {
                 item {
                     label = "uninstall app"
                     icon = R.drawable.ic_baseline_clear_24
+                    callback = { uninstallPackageWithPermissionCheck(packageName) }
                 }
             }
         }
         popupMenu.show(this,view)
+    }
+
+    @NeedsPermission(Manifest.permission.REQUEST_DELETE_PACKAGES)
+    fun uninstallPackage(packageName: String){
+        val uninstallIntent = Intent(Intent.ACTION_DELETE,Uri.parse("package:${packageName}"))
+        startActivity(uninstallIntent)
+    }
+
+    @OnPermissionDenied(Manifest.permission.REQUEST_DELETE_PACKAGES)
+    fun deletePackagePermissionDenied(){
+        Toast.makeText(this,"""Can not delete | Need Permission """.trimMargin(),Toast.LENGTH_LONG).show()
     }
 
     private fun commandReplaceDialog(appIcon: Drawable,appName: String,packageName: String, command: String){
@@ -174,8 +189,15 @@ class AppViewActivity: AppCompatActivity() {
             message(text = "old command = $command") {
                 messageTextView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
             }
-            input(hint = "new command",inputType = InputType.TYPE_CLASS_NUMBER,maxLength = 4)
-            positiveButton(text = "Enter"){
+            input(hint = "new command",inputType = InputType.TYPE_CLASS_NUMBER,maxLength = 4
+                    ,waitForPositiveButton = false,allowEmpty = false){ dialog,text ->
+                val inputField = dialog.getInputField()
+                val isSafeLength = text.length == 4
+                inputField.error = if(isSafeLength) null else "You have to choose a 4-digit command"
+                setActionButtonEnabled(WhichButton.POSITIVE,isSafeLength)
+            }
+            positiveButton {
+                //TODO
             }
         }
     }

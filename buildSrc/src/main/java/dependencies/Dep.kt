@@ -3,7 +3,9 @@ package dependencies
 object Dep {
     object AndroidX {
         // base
-        const val appCompat = "androidx.appcompat:appcompat:1.2.0"
+        private const val appCompatVersion = "1.2.0"
+        const val appCompat = "androidx.appcompat:appcompat:${appCompatVersion}"
+        const val appCompatResource = "androidx.appcompat:appcompat-resources:${appCompatVersion}"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
         const val lifecycle = "androidx.lifecycle:lifecycle-extensions:2.2.0"
         const val core = "androidx.core:core-ktx:1.3.2"
@@ -64,14 +66,17 @@ object Dep {
     }
 
     object Afollestad {
-        private const val materialDialogBaseVersion = "0.9.6"
         private const val materialDialogVersion = "3.3.0"
-        const val materialDialogCore = "com.afollestad.material-dialogs:core:${materialDialogBaseVersion}"
-        const val materialDialogCommon = "com.afollestad.material-dialogs:commons:${materialDialogBaseVersion}"
-        const val materialDialog = "com.afollestad.material-dialogs:lifecycle:${materialDialogVersion}"
         const val materialDialogInput = "com.afollestad.material-dialogs:input:${materialDialogVersion}"
 
     }
+
+    object PermissionsDispatcher {
+        private const val permissionDispatcherVersion = "4.8.0"
+        const val permissionDispatcher = "org.permissionsdispatcher:permissionsdispatcher:${permissionDispatcherVersion}"
+        const val permissionDispatcherProcessor = "org.permissionsdispatcher:permissionsdispatcher-processor:${permissionDispatcherVersion}"
+    }
+
     object GoogleGMS{
         private const val ossLicensesVersion = "11.6.0"
         const val ossLicenses = "com.google.android.gms:play-services-oss-licenses:${ossLicensesVersion}"
