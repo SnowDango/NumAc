@@ -1,6 +1,9 @@
 package com.snowdango.numac.activity.main
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -53,7 +56,6 @@ class MainActivity: AppCompatActivity() {
             }
         }
         mainButtonController.setData(resources.getStringArray(R.array.button_string))
-
         // ViewModelのobserver
         observeValue()
     }

@@ -35,15 +35,17 @@ class AppItemController(
                 appItem {
                     id(appInfo.packageName)
                     if (appInfo.id != -1) {
-                        val appIcon = pm.getApplicationIcon(appInfo.packageName)
-                        appIcon(appIcon)
+                        val appIcon = try{ pm.getApplicationIcon(appInfo.packageName) }catch (e: Exception){ null }
+                        appIcon?.let { appIcon(it) }
                         val recentlyApp = data?.find{it.packageName == appInfo.packageName}
                         appName(recentlyApp?.appName)
                         appCommand(recentlyApp?.command)
                         appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
-                        appOnLongClickListener(View.OnLongClickListener {
+                        appIcon?.let {
+                            appOnLongClickListener(View.OnLongClickListener {
                             recentlyApp?.let { app ->  appLongClickListener.longClickListener(appIcon,app.appName,appInfo.packageName, app.command, it) }!!
-                        })
+                            })
+                        }
                     } else {
                         appIcon(NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp))
                         appName(appInfo.packageName)
@@ -60,14 +62,16 @@ class AppItemController(
             if (filterData.isEmpty()) {
                 appItem {
                     id(appInfo.packageName)
-                    val appIcon = pm.getApplicationIcon(appInfo.packageName)
-                    appIcon(appIcon)
+                    val appIcon = try{ pm.getApplicationIcon(appInfo.packageName) }catch (e: Exception){ null }
+                    appIcon?.let { appIcon(it) }
                     appName(appInfo.appName)
                     appCommand(appInfo.command)
                     appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
-                    appOnLongClickListener(View.OnLongClickListener {
-                        appLongClickListener.longClickListener(appIcon, appInfo.appName, appInfo.packageName, appInfo.command, it)
-                    })
+                    appIcon?.let {
+                        appOnLongClickListener(View.OnLongClickListener {
+                            appLongClickListener.longClickListener(appIcon, appInfo.appName, appInfo.packageName, appInfo.command, it)
+                        })
+                    }
                 }
             }
         }
@@ -81,8 +85,6 @@ class AppItemController(
             super.setData(data1, data2,data3) // setData
         }
     }
-
-
 
     companion object{
         const val TAG = "epoxy appView"

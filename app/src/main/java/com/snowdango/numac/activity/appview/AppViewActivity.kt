@@ -1,11 +1,15 @@
 package com.snowdango.numac.activity.appview
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import android.widget.TextView
@@ -24,6 +28,8 @@ import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreator
 import com.snowdango.numac.actions.applistdb.DatabaseActionState
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionState
+import com.snowdango.numac.actions.removeapp.RemoveAppActionCreator
+import com.snowdango.numac.actions.removeapp.RemoveAppActionState
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.android.synthetic.main.activity_appview.*
@@ -40,6 +46,7 @@ class AppViewActivity: AppCompatActivity() {
     private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
     private val databaseActionCreator: AppListDatabaseActionCreator by inject { parametersOf(coroutineScope) }
     private val recentlyAppDatabaseActionCreator: RecentlyAppDatabaseActionCreator by inject { parametersOf(coroutineScope) }
+    private val removeAppActionCreator: RemoveAppActionCreator by inject { parametersOf(coroutineScope) }
     private val store: AppViewStore by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,9 +105,20 @@ class AppViewActivity: AppCompatActivity() {
                         appItemController.setData((store.databaseActionData.value as DatabaseActionState.Success).appList, it.recentlyList, true)
             }
         }
-
+        val removeAppObserve = Observer<RemoveAppActionState>{
+            when(it){
+                is RemoveAppActionState.None -> return@Observer
+                is RemoveAppActionState.Success -> {
+                    databaseActionCreator.getExecute()
+                    recentlyAppDatabaseActionCreator.executeGet()
+                    unregisterReceiver(uninstallEvent)
+                }
+                is RemoveAppActionState.Failed -> Toast.makeText(this,"database failed",Toast.LENGTH_SHORT).show()
+            }
+        }
         store.databaseActionData.observe(this, databaseObserve)
         store.recentlyActionData.observe(this, recentlyObserve)
+        store.removeActionData.observe(this,removeAppObserve)
     }
 
     private fun searchCallback(appItemController: AppItemController) {
@@ -173,8 +191,26 @@ class AppViewActivity: AppCompatActivity() {
 
     @NeedsPermission(Manifest.permission.REQUEST_DELETE_PACKAGES)
     fun uninstallPackage(packageName: String){
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+        intentFilter.addDataScheme("package")
+        registerReceiver(uninstallEvent,intentFilter)
         val uninstallIntent = Intent(Intent.ACTION_DELETE,Uri.parse("package:${packageName}"))
-        startActivity(uninstallIntent)
+        startActivityForResult(uninstallIntent,2121)
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
+    private val uninstallEvent = object: BroadcastReceiver(){
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            p1?.dataString?.let { removeAppActionCreator.execute(it.removePrefix("package:")) }
+        }
     }
 
     @OnPermissionDenied(Manifest.permission.REQUEST_DELETE_PACKAGES)
