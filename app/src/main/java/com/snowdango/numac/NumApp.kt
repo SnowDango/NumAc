@@ -6,18 +6,14 @@ import com.snowdango.numac.actions.applist.AppListActionCreator
 import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
 import com.snowdango.numac.actions.command.CommandActionCreator
-import com.snowdango.numac.activity.appview.AppViewActivity
-import com.snowdango.numac.activity.main.MainActivity
 import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.domain.usecase.*
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.store.main.MainStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
-import kotlinx.coroutines.coroutineScope
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 class NumApp: Application() {

@@ -55,10 +55,9 @@ class AppItemController(
         // recently以外のapp
         data?.forEach { appInfo ->
             val filterData =
-                    if(data3) data2.filter { it.packageName == appInfo.packageName }
+                    if (data3) data2.filter { it.packageName == appInfo.packageName }
                     else arrayListOf()
-
-            if(filterData.isEmpty()) {
+            if (filterData.isEmpty()) {
                 appItem {
                     id(appInfo.packageName)
                     val appIcon = pm.getApplicationIcon(appInfo.packageName)
@@ -67,19 +66,23 @@ class AppItemController(
                     appCommand(appInfo.command)
                     appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
                     appOnLongClickListener(View.OnLongClickListener {
-                        appLongClickListener.longClickListener(appIcon,appInfo.appName,appInfo.packageName,appInfo.command,it) })
+                        appLongClickListener.longClickListener(appIcon, appInfo.appName, appInfo.packageName, appInfo.command, it)
+                    })
                 }
             }
         }
     }
 
     override fun setData(data1: ArrayList<AppInfo>?, data2: ArrayList<RecentlyAppInfo>?,data3: Boolean) {
+        cancelPendingModelBuild()
         if(this.isMultiSpan){ // すでにsetDataされていたら
             requestModelBuild() // Viewの更新  　
         }else {
             super.setData(data1, data2,data3) // setData
         }
     }
+
+
 
     companion object{
         const val TAG = "epoxy appView"

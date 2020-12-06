@@ -28,7 +28,7 @@ import org.koin.core.parameter.parametersOf
 class AppViewActivity: AppCompatActivity() {
 
     private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
-    private val databaseActionCreate: AppListDatabaseActionCreator by inject { parametersOf(coroutineScope) }
+    private val databaseActionCreator: AppListDatabaseActionCreator by inject { parametersOf(coroutineScope) }
     private val recentlyAppDatabaseActionCreator: RecentlyAppDatabaseActionCreator by inject { parametersOf(coroutineScope) }
     private val store: AppViewStore by viewModel()
 
@@ -40,7 +40,7 @@ class AppViewActivity: AppCompatActivity() {
             override fun appClickListener(packageName: String) {
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
                 intent?.let {
-                    recentlyAppDatabaseActionCreator.execute(0, packageName)
+                    recentlyAppDatabaseActionCreator.executeUpdate(packageName)
                     startActivity(intent)
                 }
             }
@@ -63,7 +63,7 @@ class AppViewActivity: AppCompatActivity() {
     }
 
     override fun onStart() {
-        databaseActionCreate.getExecute() // databaseから持ってくる
+        databaseActionCreator.getExecute() // databaseから持ってくる
         super.onStart()
     }
 
@@ -77,7 +77,7 @@ class AppViewActivity: AppCompatActivity() {
                         progressMaterial.visibility = View.GONE
                         appItemController.setData(it.appList, (store.recentlyActionData.value as RecentlyAppDatabaseActionState.Success).recentlyList, true)
                     } else {
-                        recentlyAppDatabaseActionCreator.execute(1, "")
+                        recentlyAppDatabaseActionCreator.executeGet()
                     }
             }
         }
@@ -176,7 +176,6 @@ class AppViewActivity: AppCompatActivity() {
             }
             input(hint = "new command",inputType = InputType.TYPE_CLASS_NUMBER,maxLength = 4)
             positiveButton(text = "Enter"){
-
             }
         }
     }
