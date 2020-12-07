@@ -111,7 +111,6 @@ class AppViewActivity: AppCompatActivity() {
                 is RemoveAppActionState.Success -> {
                     databaseActionCreator.getExecute()
                     recentlyAppDatabaseActionCreator.executeGet()
-                    unregisterReceiver(uninstallEvent)
                 }
                 is RemoveAppActionState.Failed -> Toast.makeText(this,"database failed",Toast.LENGTH_SHORT).show()
             }
@@ -123,10 +122,7 @@ class AppViewActivity: AppCompatActivity() {
 
     private fun searchCallback(appItemController: AppItemController) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return true
-            }
-
+            override fun onQueryTextSubmit(p0: String?): Boolean = true
             override fun onQueryTextChange(p0: String?): Boolean {
                 p0?.let {
                     if (it != StringBuilder().toString()) {
@@ -191,25 +187,28 @@ class AppViewActivity: AppCompatActivity() {
 
     @NeedsPermission(Manifest.permission.REQUEST_DELETE_PACKAGES)
     fun uninstallPackage(packageName: String){
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
-        intentFilter.addDataScheme("package")
-        registerReceiver(uninstallEvent,intentFilter)
         val uninstallIntent = Intent(Intent.ACTION_DELETE,Uri.parse("package:${packageName}"))
-        startActivityForResult(uninstallIntent,2121)
+        startActivity(uninstallIntent)
     }
 
     override fun onResume() {
+        val intentFilter = IntentFilter().apply {
+            addAction(Intent.ACTION_PACKAGE_REMOVED)
+            addDataScheme("package")
+        }
+        registerReceiver(uninstallEvent,intentFilter)
         super.onResume()
     }
 
     override fun onStop() {
+        unregisterReceiver(uninstallEvent)
         super.onStop()
     }
 
     private val uninstallEvent = object: BroadcastReceiver(){
-        override fun onReceive(p0: Context?, p1: Intent?) {
+        override fun onReceive(p0: Context?, p1: Intent?){
             p1?.dataString?.let { removeAppActionCreator.execute(it.removePrefix("package:")) }
+            Log.d("uri package path", p1?.data?.path.toString())
         }
     }
 

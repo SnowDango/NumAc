@@ -17,7 +17,7 @@ android {
     buildToolsVersion("29.0.3")
     defaultConfig {
         applicationId = "com.snowdango.numac"
-        minSdkVersion(24)
+        minSdkVersion(26)
         targetSdkVersion(30)
         versionCode = 12
         versionName = "2.1.1"
