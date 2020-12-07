@@ -2,7 +2,7 @@
 <resources>
 
     <!-- DayLight Color-->
-    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#f4f500</color>
 
@@ -24,6 +24,8 @@
     <!-- CommandReplaceActivity Color-->
     <color name="replaceButtonBackground">#ffffff</color>
     <color name="replaceButtonText">#000000</color>
-
+    
+    <color name="dialog_button_enable">#AA000000</color>
+    <color name="dialog_button_false">#AAFFFFFF</color>
 
 </resources>

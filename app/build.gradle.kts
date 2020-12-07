@@ -8,7 +8,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("android.extensions")
-    id("kotlin-kapt")
+    kotlin("kapt")
     id("com.google.gms.oss.licenses.plugin")
 }
 
@@ -17,7 +17,7 @@ android {
     buildToolsVersion("29.0.3")
     defaultConfig {
         applicationId = "com.snowdango.numac"
-        minSdkVersion(24)
+        minSdkVersion(26)
         targetSdkVersion(30)
         versionCode = 12
         versionName = "2.1.1"
@@ -48,6 +48,7 @@ dependencies {
 
     // AndroidX
     implementation(Dep.AndroidX.appCompat)
+    implementation(Dep.AndroidX.appCompatResource)
     implementation(Dep.AndroidX.constraintLayout)
     implementation(Dep.AndroidX.lifecycle)
     implementation(Dep.AndroidX.core)
@@ -65,6 +66,10 @@ dependencies {
 
     //kotlinX
     implementation(Dep.KotlinX.coroutine)
+
+    //permissionDispatcher
+    implementation(Dep.PermissionsDispatcher.permissionDispatcher)
+    kapt(Dep.PermissionsDispatcher.permissionDispatcherProcessor)
 
     //koin
     implementation(Dep.Koin.koin)

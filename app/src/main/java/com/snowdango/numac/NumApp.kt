@@ -6,11 +6,13 @@ import com.snowdango.numac.actions.applist.AppListActionCreator
 import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
 import com.snowdango.numac.actions.command.CommandActionCreator
+import com.snowdango.numac.actions.removeapp.RemoveAppActionCreator
 import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.domain.usecase.*
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.store.main.MainStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
+import kotlinx.coroutines.coroutineScope
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -58,6 +60,8 @@ class NumApp: Application() {
             AppListDatabaseActionCreator(coroutineScope,get(), AppListDatabaseUse()) }
         factory { (coroutineScope: CancellableCoroutineScope) ->
             RecentlyAppDatabaseActionCreator(coroutineScope,get(),SaveRecentlyApp()) }
+        factory {(coroutineScope: CancellableCoroutineScope) ->
+            RemoveAppActionCreator(coroutineScope,get(),AppListDatabaseUse())}
         viewModel { AppViewStore(get()) }
     }
 }

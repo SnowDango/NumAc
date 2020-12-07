@@ -30,4 +30,7 @@ interface AppDao{
 
     @Query("update `app-info` set command=:command where package_name=:packageName")
     fun updateCommandByPackageName(command:String,packageName: String)
+
+    @Query("delete from `app-info` where package_name=:packageName")
+    fun deleteAppByPackageName(packageName: String)
 }

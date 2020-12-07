@@ -33,6 +33,8 @@
         <activity android:name=".activity.appview.AppViewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
             </intent-filter>
         </activity>
     </application>
