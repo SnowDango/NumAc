@@ -28,8 +28,10 @@ class AppListDatabaseUse() {
 
     fun removeApp(packageName: String): DatabaseResult{
         return try{
-            val dao = AppDataBase.getDatabase(NumApp.singletonContext()).appDao()
-            dao.deleteAppByPackageName(packageName)
+            val appDao = AppDataBase.getDatabase(NumApp.singletonContext()).appDao()
+            appDao.deleteAppByPackageName(packageName)
+            val recentDao = AppDataBase.getDatabase(NumApp.singletonContext()).recentlyDao()
+            recentDao.removeRecentlyAppByPackageName(packageName)
             DatabaseResult.Success(arrayListOf())
         }catch (e: Exception){
             DatabaseResult.Failed
