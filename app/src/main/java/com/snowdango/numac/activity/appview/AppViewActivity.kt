@@ -210,8 +210,7 @@ class AppViewActivity: AppCompatActivity() {
 
     private val uninstallEvent = object: BroadcastReceiver(){
         override fun onReceive(p0: Context?, p1: Intent?){
-            p1?.dataString?.let { removeAppActionCreator.execute(it.removePrefix("package:")) }
-            Log.d("uri package path", p1?.data?.path.toString())
+            p1?.data?.schemeSpecificPart?.let { removeAppActionCreator.execute(it) }
         }
     }
 
