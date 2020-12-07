@@ -6,6 +6,6 @@ data class RemoveAppAction(
 
 sealed class RemoveAppActionState{
     object Success: RemoveAppActionState()
-    object Failed: RemoveAppActionState()
+    data class Failed(val packageName: String) : RemoveAppActionState()
     object None: RemoveAppActionState()
 }

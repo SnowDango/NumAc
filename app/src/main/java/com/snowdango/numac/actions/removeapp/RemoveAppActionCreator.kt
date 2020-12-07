@@ -20,7 +20,7 @@ class RemoveAppActionCreator(private val coroutineScope: CoroutineScope,
     private fun removeApp(packageName: String){
         val action = when(databaseUse.removeApp(packageName)){
             is AppListDatabaseUse.DatabaseResult.Success -> RemoveAppAction(RemoveAppActionState.Success)
-            is AppListDatabaseUse.DatabaseResult.Failed -> RemoveAppAction(RemoveAppActionState.Failed)
+            is AppListDatabaseUse.DatabaseResult.Failed -> RemoveAppAction(RemoveAppActionState.Failed(packageName))
         }
 
         coroutineScope.launch(Dispatchers.Main){

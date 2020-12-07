@@ -112,7 +112,10 @@ class AppViewActivity: AppCompatActivity() {
                     databaseActionCreator.getExecute()
                     recentlyAppDatabaseActionCreator.executeGet()
                 }
-                is RemoveAppActionState.Failed -> Toast.makeText(this,"database failed",Toast.LENGTH_SHORT).show()
+                is RemoveAppActionState.Failed -> {
+                    Toast.makeText(this,"database failed",Toast.LENGTH_SHORT).show()
+                    removeAppActionCreator.execute(it.packageName)
+                }
             }
         }
         store.databaseActionData.observe(this, databaseObserve)
