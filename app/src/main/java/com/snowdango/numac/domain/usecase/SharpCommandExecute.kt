@@ -12,6 +12,7 @@ enum class CommandList{
     ChangeView,
     LaunchAppView,
     RoadAppList,
+    OssLicense,
     Error
 }
 
@@ -21,6 +22,7 @@ class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
         object Recreate: CommandResult()
         object Road: CommandResult()
         object AppViewIntent: CommandResult()
+        object OssLicense: CommandResult()
         class Failed(val errorString: String): CommandResult()
         object None: CommandResult()
     }
@@ -32,6 +34,7 @@ class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
                 CommandList.LaunchAppView -> CommandResult.AppViewIntent
                 CommandList.RoadAppList -> CommandResult.Road
                 CommandList.Error -> CommandResult.Failed("NotFoundCommand")
+                CommandList.OssLicense -> CommandResult.OssLicense
             }
         }catch (e: Exception){
             CommandResult.Failed("Exception")
@@ -44,6 +47,7 @@ class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
             sharpCommandList[0] -> changeViewMode()
             sharpCommandList[1] -> launchAppView()
             sharpCommandList[2] -> roadAppList()
+            sharpCommandList[3] -> launchOssLicense()
             else -> CommandList.Error
         }
     }
@@ -69,5 +73,9 @@ class SharpCommandExecute(private val coroutineScope: CoroutineScope) {
 
     private fun launchAppView(): CommandList{
         return CommandList.LaunchAppView
+    }
+
+    private fun launchOssLicense(): CommandList{
+        return CommandList.OssLicense
     }
 }

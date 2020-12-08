@@ -31,7 +31,6 @@ interface RecentlyDao {
     @Query("select min(id) from `recently-app`")
     fun getMinId():Int
 
-
     fun updateRecently(recentlyAppInfo: RecentlyAppInfo): List<RecentlyAppInfo>{
         val data = getAll()
         val dataQuantity = data.size
