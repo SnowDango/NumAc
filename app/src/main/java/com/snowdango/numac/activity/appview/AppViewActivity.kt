@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -56,6 +57,10 @@ class AppViewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appview)
 
+        val verticalItemCount: Int =
+                if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 12
+                else 8
+
         val appItemController = AppItemController(object : AppItemController.AppClickListener {
             override fun appClickListener(packageName: String) {
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
@@ -69,13 +74,21 @@ class AppViewActivity: AppCompatActivity() {
                 setPopupMenu(appIcon,appName, packageName, command, view)
                 return true
             }
-        })
+        },verticalItemCount)
+        appItemController.setFilterDuplicates(true)
         recyclerViewApp.apply {
             adapter = appItemController.adapter
-            layoutManager = GridLayoutManager(applicationContext, 4).apply {
+            layoutManager = GridLayoutManager(applicationContext, verticalItemCount).apply {
                 orientation = GridLayoutManager.VERTICAL
+                spanSizeLookup = appItemController.spanSizeLookup
             }
         }
+        if(store.databaseActionData.value is DatabaseActionState.Success)
+            if(store.recentlyActionData.value is RecentlyAppDatabaseActionState.Success)
+                appItemController.setData(
+                        (store.databaseActionData.value as DatabaseActionState.Success).appList,
+                        (store.recentlyActionData.value as RecentlyAppDatabaseActionState.Success).recentlyList,
+                        true)
         // search View のCallBack
         searchCallback(appItemController)
         // observerの設定
@@ -83,7 +96,9 @@ class AppViewActivity: AppCompatActivity() {
     }
 
     override fun onStart() {
-        databaseActionCreator.getExecute() // databaseから持ってくる
+        // databaseから持ってくる
+        if (store.databaseActionData.value !is DatabaseActionState.Success)
+            databaseActionCreator.getExecute()
         super.onStart()
     }
 

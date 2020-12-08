@@ -21,15 +21,6 @@
         android:onClick="@{appOnClickListener}"
         android:onLongClick="@{appOnLongClickListener}">
 
-        <TextView
-            android:id="@+id/appCommandView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textAlignment="center"
-            android:text="@{appCommand}"
-            android:maxLines="1"/>
-
         <com.santalu.aspectratioimageview.AspectRatioImageView
             android:id="@+id/appIconView"
             android:layout_width="70dp"
@@ -38,6 +29,15 @@
             android:background="#00000000"
             app:ari_ratio="0.8"
             android:src="@{appIcon}" />
+
+        <TextView
+            android:id="@+id/appCommandView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:text="@{appCommand}"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/appNameView"

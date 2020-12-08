@@ -6,15 +6,17 @@ import com.airbnb.epoxy.Typed3EpoxyController
 import com.snowdango.numac.R
 import com.snowdango.numac.NumApp
 import com.snowdango.numac.appItem
+import com.snowdango.numac.appItemHeader
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
 
 class AppItemController(
         private val appClickListener: AppClickListener,
-        private val appLongClickListener: LongClickListener
+        private val appLongClickListener: LongClickListener,
+        private val verticalItemCount: Int
 ): Typed3EpoxyController<ArrayList<AppInfo>, ArrayList<RecentlyAppInfo>, Boolean>(){
 
-    private val recentlyQuantity: Int = 4
+    private val recentlyAppSize: Int = 4
 
     interface AppClickListener {
         fun appClickListener(packageName: String)
@@ -27,8 +29,15 @@ class AppItemController(
         val pm = NumApp.singletonContext().packageManager
         if(data3) {
             // dataが足りないときの一時data
-            for (num in 0 until recentlyQuantity.minus(data2.size)) {
-                data2.add(RecentlyAppInfo(id = -1, packageName = "no recently"))
+            if(recentlyAppSize > data2.size) {
+                for (num in 0 until recentlyAppSize.minus(data2.size)) {
+                    data2.add(RecentlyAppInfo(id = -1, packageName = "no recently${num + 1}"))
+                }
+            }
+            appItemHeader {
+                id("recentlyApp")
+                header("recently")
+                spanSizeOverride { _, _, _ -> verticalItemCount }
             }
             // recentlyのapp
             data2.forEach { appInfo ->
@@ -49,28 +58,30 @@ class AppItemController(
                         appName(appInfo.packageName)
                         appCommand(StringBuilder().toString())
                     }
+                    spanSizeOverride{_,_,_ -> verticalItemCount/4}
                 }
             }
         }
+        appItemHeader {
+            id("allApp")
+            header("all")
+            spanSizeOverride { _, _, _ -> verticalItemCount}
+        }
         // recently以外のapp
         data?.forEach { appInfo ->
-            val filterData =
-                    if (data3) data2.filter { it.packageName == appInfo.packageName }
-                    else arrayListOf()
-            if (filterData.isEmpty()) {
-                appItem {
-                    id(appInfo.packageName)
-                    val appIcon = try{ pm.getApplicationIcon(appInfo.packageName) }catch (e: Exception){ null }
-                    appIcon?.let { appIcon(it) }
-                    appName(appInfo.appName)
-                    appCommand(appInfo.command)
-                    appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
-                    appIcon?.let {
-                        appOnLongClickListener(View.OnLongClickListener {
-                            appLongClickListener.longClickListener(appIcon, appInfo.appName, appInfo.packageName, appInfo.command, it)
-                        })
-                    }
+            appItem {
+                id(appInfo.packageName)
+                val appIcon = try{ pm.getApplicationIcon(appInfo.packageName) }catch (e: Exception){ null }
+                appIcon?.let { appIcon(it) }
+                appName(appInfo.appName)
+                appCommand(appInfo.command)
+                appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
+                appIcon?.let {
+                    appOnLongClickListener(View.OnLongClickListener {
+                        appLongClickListener.longClickListener(appIcon, appInfo.appName, appInfo.packageName, appInfo.command, it)
+                    })
                 }
+                spanSizeOverride {_,_,_ -> 2}
             }
         }
     }
