@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -53,6 +54,10 @@ class AppViewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appview)
 
+        val verticalItemCount: Int =
+                if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 6
+                else 4
+
         val appItemController = AppItemController(object : AppItemController.AppClickListener {
             override fun appClickListener(packageName: String) {
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
@@ -66,11 +71,12 @@ class AppViewActivity: AppCompatActivity() {
                 setPopupMenu(appIcon,appName, packageName, command, view)
                 return true
             }
-        })
+        },verticalItemCount)
         recyclerViewApp.apply {
             adapter = appItemController.adapter
             layoutManager = GridLayoutManager(applicationContext, 4).apply {
                 orientation = GridLayoutManager.VERTICAL
+                spanSizeLookup = appItemController.spanSizeLookup
             }
         }
         // search View のCallBack

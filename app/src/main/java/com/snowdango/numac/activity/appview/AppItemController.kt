@@ -6,12 +6,14 @@ import com.airbnb.epoxy.Typed3EpoxyController
 import com.snowdango.numac.R
 import com.snowdango.numac.NumApp
 import com.snowdango.numac.appItem
+import com.snowdango.numac.appItemHeader
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
 
 class AppItemController(
         private val appClickListener: AppClickListener,
-        private val appLongClickListener: LongClickListener
+        private val appLongClickListener: LongClickListener,
+        private val verticalItemCount: Int
 ): Typed3EpoxyController<ArrayList<AppInfo>, ArrayList<RecentlyAppInfo>, Boolean>(){
 
     private val recentlyQuantity: Int = 4
@@ -29,6 +31,11 @@ class AppItemController(
             // dataが足りないときの一時data
             for (num in 0 until recentlyQuantity.minus(data2.size)) {
                 data2.add(RecentlyAppInfo(id = -1, packageName = "no recently"))
+            }
+            appItemHeader {
+                id("recentlyApp")
+                header("recently")
+                spanSizeOverride { _, _, _ -> verticalItemCount }
             }
             // recentlyのapp
             data2.forEach { appInfo ->
@@ -51,6 +58,11 @@ class AppItemController(
                     }
                 }
             }
+        }
+        appItemHeader {
+            id("allApp")
+            header("all")
+            spanSizeOverride { _, _, _ -> verticalItemCount }
         }
         // recently以外のapp
         data?.forEach { appInfo ->
