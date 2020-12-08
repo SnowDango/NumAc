@@ -37,6 +37,7 @@ class CommandActionCreator(
             is SharpCommandExecute.CommandResult.Road -> CommandAction(CommandActionState.Road)
             is SharpCommandExecute.CommandResult.AppViewIntent -> CommandAction(CommandActionState.AppViewIntent)
             is SharpCommandExecute.CommandResult.Failed -> CommandAction(CommandActionState.Failed(result.errorString))
+            is SharpCommandExecute.CommandResult.OssLicense -> CommandAction(CommandActionState.OssLicense)
             is SharpCommandExecute.CommandResult.None -> CommandAction(CommandActionState.None)
             else -> CommandAction(CommandActionState.Failed("Exception"))
         }

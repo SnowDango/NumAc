@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.gms.oss.licenses.OssLicensesActivity
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.snowdango.numac.R
 import com.snowdango.numac.actions.applist.AppListActionCreator
 import com.snowdango.numac.actions.applist.AppListActionState
@@ -98,6 +100,7 @@ class MainActivity: AppCompatActivity() {
                 }
                 is CommandActionState.Failed -> errorViewBefore(it.failedState)
                 is CommandActionState.Road -> loadData()
+                is CommandActionState.OssLicense -> startActivity(Intent(this,OssLicensesMenuActivity::class.java))
                 is CommandActionState.AppViewIntent -> startActivity(Intent(this,AppViewActivity::class.java))
                 is CommandActionState.None -> return@Observer
             }
