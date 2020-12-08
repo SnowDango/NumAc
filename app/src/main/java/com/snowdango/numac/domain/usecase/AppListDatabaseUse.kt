@@ -38,4 +38,14 @@ class AppListDatabaseUse() {
         }
     }
 
+    fun updateCommand(packageName: String,command: String): DatabaseResult {
+        return try{
+            val dao = AppDataBase.getDatabase(NumApp.singletonContext()).appDao()
+            dao.updateCommandByPackageName(command,packageName)
+            DatabaseResult.Success(arrayListOf())
+        }catch (e:Exception){
+            DatabaseResult.Failed
+        }
+    }
+
 }
