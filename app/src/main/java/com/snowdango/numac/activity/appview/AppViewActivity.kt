@@ -55,8 +55,8 @@ class AppViewActivity: AppCompatActivity() {
         setContentView(R.layout.activity_appview)
 
         val verticalItemCount: Int =
-                if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 6
-                else 4
+                if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 12
+                else 8
 
         val appItemController = AppItemController(object : AppItemController.AppClickListener {
             override fun appClickListener(packageName: String) {
@@ -72,13 +72,20 @@ class AppViewActivity: AppCompatActivity() {
                 return true
             }
         },verticalItemCount)
+        appItemController.setFilterDuplicates(true)
         recyclerViewApp.apply {
             adapter = appItemController.adapter
-            layoutManager = GridLayoutManager(applicationContext, 4).apply {
+            layoutManager = GridLayoutManager(applicationContext, verticalItemCount).apply {
                 orientation = GridLayoutManager.VERTICAL
                 spanSizeLookup = appItemController.spanSizeLookup
             }
         }
+        if(store.databaseActionData.value is DatabaseActionState.Success)
+            if(store.recentlyActionData.value is RecentlyAppDatabaseActionState.Success)
+                appItemController.setData(
+                        (store.databaseActionData.value as DatabaseActionState.Success).appList,
+                        (store.recentlyActionData.value as RecentlyAppDatabaseActionState.Success).recentlyList,
+                        true)
         // search View のCallBack
         searchCallback(appItemController)
         // observerの設定
@@ -86,7 +93,9 @@ class AppViewActivity: AppCompatActivity() {
     }
 
     override fun onStart() {
-        databaseActionCreator.getExecute() // databaseから持ってくる
+        // databaseから持ってくる
+        if (store.databaseActionData.value !is DatabaseActionState.Success)
+            databaseActionCreator.getExecute()
         super.onStart()
     }
 
