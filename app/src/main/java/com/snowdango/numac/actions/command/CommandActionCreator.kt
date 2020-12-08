@@ -5,7 +5,6 @@ import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.domain.usecase.LaunchApp
 import com.snowdango.numac.domain.usecase.SharpCommandExecute
-import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

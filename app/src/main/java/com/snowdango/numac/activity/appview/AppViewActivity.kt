@@ -28,6 +28,8 @@ import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreator
 import com.snowdango.numac.actions.applistdb.DatabaseActionState
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionState
+import com.snowdango.numac.actions.changecommnad.ChangeCommandActionCreator
+import com.snowdango.numac.actions.changecommnad.ChangeCommandActionState
 import com.snowdango.numac.actions.removeapp.RemoveAppActionCreator
 import com.snowdango.numac.actions.removeapp.RemoveAppActionState
 import com.snowdango.numac.store.appview.AppViewStore
@@ -47,6 +49,7 @@ class AppViewActivity: AppCompatActivity() {
     private val databaseActionCreator: AppListDatabaseActionCreator by inject { parametersOf(coroutineScope) }
     private val recentlyAppDatabaseActionCreator: RecentlyAppDatabaseActionCreator by inject { parametersOf(coroutineScope) }
     private val removeAppActionCreator: RemoveAppActionCreator by inject { parametersOf(coroutineScope) }
+    private val changeCommandActionCreator: ChangeCommandActionCreator by inject { parametersOf(coroutineScope) }
     private val store: AppViewStore by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,9 +121,20 @@ class AppViewActivity: AppCompatActivity() {
                 }
             }
         }
+        val changeCommandObserve = Observer<ChangeCommandActionState>{
+            when(it) {
+                is ChangeCommandActionState.None -> return@Observer
+                is ChangeCommandActionState.Success -> {
+                    databaseActionCreator.getExecute()
+                    recentlyAppDatabaseActionCreator.executeGet()
+                }
+                is ChangeCommandActionState.Failed -> Toast.makeText(this, it.errorString,Toast.LENGTH_LONG).show()
+            }
+        }
         store.databaseActionData.observe(this, databaseObserve)
         store.recentlyActionData.observe(this, recentlyObserve)
         store.removeActionData.observe(this,removeAppObserve)
+        store.changeCommandData.observe(this,changeCommandObserve)
     }
 
     private fun searchCallback(appItemController: AppItemController) {
@@ -234,8 +248,13 @@ class AppViewActivity: AppCompatActivity() {
                 setActionButtonEnabled(WhichButton.POSITIVE,isSafeLength)
             }
             positiveButton {
-                //TODO
+                changeCommandActionCreator.execute(packageName,getInputField().text.toString())
             }
         }
+    }
+
+    override fun onDestroy() {
+        coroutineScope.cancel()
+        super.onDestroy()
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import com.snowdango.numac.actions.applist.AppListAction
 import com.snowdango.numac.actions.applistdb.DatabaseAction
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseAction
+import com.snowdango.numac.actions.changecommnad.ChangeCommandAction
 import com.snowdango.numac.actions.command.CommandAction
 import com.snowdango.numac.actions.removeapp.RemoveAppAction
 import java.util.*
@@ -15,6 +16,7 @@ class Dispatcher {
     private val databaseListeners = Collections.synchronizedList(mutableListOf<DatabaseActionListener>())
     private val recentlyListeners = Collections.synchronizedList(mutableListOf<RecentlyActionListener>())
     private val removeListeners = Collections.synchronizedList(mutableListOf<RemoveAppActionListener>())
+    private val changeCommandListener = Collections.synchronizedList(mutableListOf<ChangeCommandActionListener>())
 
     interface AppListActionListener {
         fun on(action: AppListAction)
@@ -34,6 +36,10 @@ class Dispatcher {
 
     interface RemoveAppActionListener{
         fun on(action: RemoveAppAction)
+    }
+
+    interface ChangeCommandActionListener{
+        fun on(action: ChangeCommandAction)
     }
 
     fun dispatchDatabase(action: DatabaseAction) {
@@ -60,6 +66,11 @@ class Dispatcher {
         removeListeners.forEach { it.on(action) }
     }
 
+    fun dispatchChangeCommand(action: ChangeCommandAction){
+        Log.d("dispatcher","changeCommand")
+        changeCommandListener.forEach { it.on(action) }
+    }
+
     fun registerMain(listenerAppList: AppListActionListener,
                  listenerCommand: CommandActionListener) {
         Log.d(TAG,"registerMain")
@@ -69,11 +80,13 @@ class Dispatcher {
 
     fun registerAppView(listenerDatabaseActionListener: DatabaseActionListener,
                         listenerRecentlyActionListener: RecentlyActionListener,
-                        listenerRemoveAppActionListener: RemoveAppActionListener){
+                        listenerRemoveAppActionListener: RemoveAppActionListener,
+                        listenerChangeCommand: ChangeCommandActionListener){
         Log.d(TAG,"registerAppView")
         databaseListeners.add(listenerDatabaseActionListener)
         recentlyListeners.add(listenerRecentlyActionListener)
         removeListeners.add(listenerRemoveAppActionListener)
+        changeCommandListener.add(listenerChangeCommand)
     }
 
     fun unregisterMain(listenerAppList: AppListActionListener,
@@ -85,11 +98,13 @@ class Dispatcher {
 
     fun unregisterAppView(listenerDatabaseListener: DatabaseActionListener,
                           listenerRecentlyListener: RecentlyActionListener,
-                          listenerRemoveAppActionListener: RemoveAppActionListener){
+                          listenerRemoveAppActionListener: RemoveAppActionListener,
+                          listenerChangeCommand: ChangeCommandActionListener){
         Log.d(TAG,"unregisterAppView")
         databaseListeners.remove(listenerDatabaseListener)
         recentlyListeners.remove(listenerRecentlyListener)
         removeListeners.remove(listenerRemoveAppActionListener)
+        changeCommandListener.remove(listenerChangeCommand)
     }
 
     companion object {
