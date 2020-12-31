@@ -6,11 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import android.widget.TextView
@@ -225,9 +225,13 @@ class AppViewActivity: AppCompatActivity() {
                     callback = { uninstallPackageWithPermissionCheck(packageName) }
                 }
                 item {
-                    label = if(targetApp?.favorite == 0) "favorite" else "not favorite"
-                    icon = if(targetApp?.favorite == 0) R.drawable.ic_baseline_star_24 else R.drawable.ic_baseline_star_24_yellow
-                    callback = {if (targetApp?.favorite == 0) controlFavoriteActionCreator.execute(packageName,1) else controlFavoriteActionCreator.execute(packageName,0)}
+                    label = "favorite"
+                    icon = R.drawable.ic_baseline_star_24
+                    iconColor = if (targetApp?.favorite == 0) Color.GRAY else Color.YELLOW
+                    callback = {
+                        if (targetApp?.favorite == 0) controlFavoriteActionCreator.execute(packageName,1)
+                        else controlFavoriteActionCreator.execute(packageName,0)
+                    }
                 }
             }
         }
