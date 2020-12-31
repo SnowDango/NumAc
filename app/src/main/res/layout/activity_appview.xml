@@ -15,7 +15,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/invisibleAppView"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/invisibleAppView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

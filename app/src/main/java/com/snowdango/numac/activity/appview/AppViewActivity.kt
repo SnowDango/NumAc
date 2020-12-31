@@ -59,6 +59,7 @@ class AppViewActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appview)
+        invisibleAppView.setImageDrawable(getDrawable(R.drawable.ic_baseline_turned_in_not_36))
 
         val verticalItemCount: Int =
                 if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 12
