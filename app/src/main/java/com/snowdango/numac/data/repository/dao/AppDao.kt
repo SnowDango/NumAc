@@ -35,5 +35,5 @@ interface AppDao{
     fun deleteAppByPackageName(packageName: String)
 
     @Query("update `app-info` set favorite=:favorite where package_name=:packageName")
-    fun updateFavorite(packageName: String,favorite: Boolean)
+    fun updateFavorite(packageName: String,favorite: Int)
 }

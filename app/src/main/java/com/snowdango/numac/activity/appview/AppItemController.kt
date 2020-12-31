@@ -17,6 +17,7 @@ class AppItemController(
 ): Typed3EpoxyController<ArrayList<AppInfo>, ArrayList<RecentlyAppInfo>, Boolean>(){
 
     private val recentlyAppSize: Int = 4
+    private val pm = NumApp.singletonContext().packageManager
 
     interface AppClickListener {
         fun appClickListener(packageName: String)
@@ -25,8 +26,7 @@ class AppItemController(
         fun longClickListener(appIcon:Drawable, appName: String,packageName: String,command: String,view: View): Boolean
     }
 
-    override fun buildModels(data: ArrayList<AppInfo>?,data2: ArrayList<RecentlyAppInfo>,data3:Boolean) {
-        val pm = NumApp.singletonContext().packageManager
+    override fun buildModels(data: ArrayList<AppInfo>,data2: ArrayList<RecentlyAppInfo>,data3:Boolean) {
         if(data3) {
             // dataが足りないときの一時data
             if(recentlyAppSize > data2.size) {
@@ -44,7 +44,7 @@ class AppItemController(
                 appItem {
                     id(appInfo.packageName)
                     if (appInfo.id != -1) {
-                        val appIcon = try{ pm.getApplicationIcon(appInfo.packageName) }catch (e: Exception){ NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp) }
+                        val appIcon = getAppIcon(appInfo.packageName)
                         appIcon(appIcon)
                         val recentlyApp = data?.find { it.packageName == appInfo.packageName }
                         appName(recentlyApp?.appName)
@@ -62,16 +62,40 @@ class AppItemController(
                 }
             }
         }
+        val favoriteList = data.filter { it.favorite == 1 }
+        if(favoriteList.isNotEmpty()){
+            appItemHeader {
+                id("favoriteApp")
+                header("favorite")
+                spanSizeOverride{_,_,_ -> verticalItemCount}
+            }
+            favoriteList.forEach {appInfo ->
+                appItem {
+                    id(appInfo.packageName)
+                    val appIcon = getAppIcon(appInfo.packageName)
+                    appIcon?.let { appIcon(it) }
+                    appName(appInfo.appName)
+                    appCommand(appInfo.command)
+                    appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
+                    appIcon?.let {
+                        appOnLongClickListener(View.OnLongClickListener {
+                            appLongClickListener.longClickListener(appIcon, appInfo.appName, appInfo.packageName, appInfo.command, it)
+                        })
+                    }
+                    spanSizeOverride { _, _, _ -> 2 }
+                }
+            }
+        }
         appItemHeader {
-            id("allApp")
-            header("all")
+            id("otherApp")
+            header("other")
             spanSizeOverride { _, _, _ -> verticalItemCount}
         }
         // recently以外のapp
-        data?.forEach { appInfo ->
+        data.forEach { appInfo ->
             appItem {
                 id(appInfo.packageName)
-                val appIcon = try{ pm.getApplicationIcon(appInfo.packageName) }catch (e: Exception){ null }
+                val appIcon = getAppIcon(appInfo.packageName)
                 appIcon?.let { appIcon(it) }
                 appName(appInfo.appName)
                 appCommand(appInfo.command)
@@ -86,7 +110,15 @@ class AppItemController(
         }
     }
 
-    override fun setData(data1: ArrayList<AppInfo>?, data2: ArrayList<RecentlyAppInfo>?,data3: Boolean) {
+    private fun getAppIcon(packageName: String):Drawable?{
+        return try{
+            pm.getApplicationIcon(packageName)
+        }catch (e:java.lang.Exception){
+            NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp)!!
+        }
+    }
+
+    override fun setData(data1: ArrayList<AppInfo>, data2: ArrayList<RecentlyAppInfo>,data3: Boolean) {
         cancelPendingModelBuild()
         if(this.isMultiSpan){ // すでにsetDataされていたら
             requestModelBuild() // Viewの更新  　

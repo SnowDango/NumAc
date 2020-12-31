@@ -31,6 +31,8 @@ import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionState
 import com.snowdango.numac.actions.changecommnad.ChangeCommandActionCreator
 import com.snowdango.numac.actions.changecommnad.ChangeCommandActionState
+import com.snowdango.numac.actions.controlfavorite.ControlFavoriteActionCreator
+import com.snowdango.numac.actions.controlfavorite.ControlFavoriteActionState
 import com.snowdango.numac.actions.removeapp.RemoveAppActionCreator
 import com.snowdango.numac.actions.removeapp.RemoveAppActionState
 import com.snowdango.numac.store.appview.AppViewStore
@@ -51,6 +53,7 @@ class AppViewActivity: AppCompatActivity() {
     private val recentlyAppDatabaseActionCreator: RecentlyAppDatabaseActionCreator by inject { parametersOf(coroutineScope) }
     private val removeAppActionCreator: RemoveAppActionCreator by inject { parametersOf(coroutineScope) }
     private val changeCommandActionCreator: ChangeCommandActionCreator by inject { parametersOf(coroutineScope) }
+    private val controlFavoriteActionCreator: ControlFavoriteActionCreator by inject { parametersOf(coroutineScope) }
     private val store: AppViewStore by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,10 +149,18 @@ class AppViewActivity: AppCompatActivity() {
                 is ChangeCommandActionState.Failed -> Toast.makeText(this, it.errorString,Toast.LENGTH_LONG).show()
             }
         }
+        val controlFavoriteObserve = Observer<ControlFavoriteActionState>{
+            when(it){
+                is ControlFavoriteActionState.None -> return@Observer
+                is ControlFavoriteActionState.Success -> databaseActionCreator.getExecute()
+                is ControlFavoriteActionState.Failed -> Toast.makeText(this,"database error",Toast.LENGTH_LONG).show()
+            }
+        }
         store.databaseActionData.observe(this, databaseObserve)
         store.recentlyActionData.observe(this, recentlyObserve)
         store.removeActionData.observe(this,removeAppObserve)
         store.changeCommandData.observe(this,changeCommandObserve)
+        store.controlFavoriteData.observe(this,controlFavoriteObserve)
     }
 
     private fun searchCallback(appItemController: AppItemController) {
@@ -200,6 +211,7 @@ class AppViewActivity: AppCompatActivity() {
     }
 
     private fun setPopupMenu(appIcon: Drawable, appName:String, packageName: String, command: String, view: View) {
+        val targetApp = (store.databaseActionData.value as DatabaseActionState.Success).appList.find { it.packageName == packageName }
         val popupMenu = popupMenu {
             section {
                 item {
@@ -212,10 +224,17 @@ class AppViewActivity: AppCompatActivity() {
                     icon = R.drawable.ic_baseline_clear_24
                     callback = { uninstallPackageWithPermissionCheck(packageName) }
                 }
+                item {
+                    label = if(targetApp?.favorite == 0) "favorite" else "not favorite"
+                    icon = if(targetApp?.favorite == 0) R.drawable.ic_baseline_star_24 else R.drawable.ic_baseline_star_24_yellow
+                    callback = {if (targetApp?.favorite == 0) controlFavoriteActionCreator.execute(packageName,1) else controlFavoriteActionCreator.execute(packageName,0)}
+                }
             }
         }
         popupMenu.show(this,view)
     }
+
+
 
     @NeedsPermission(Manifest.permission.REQUEST_DELETE_PACKAGES)
     fun uninstallPackage(packageName: String){

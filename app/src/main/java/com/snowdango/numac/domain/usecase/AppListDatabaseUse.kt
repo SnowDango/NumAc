@@ -48,4 +48,14 @@ class AppListDatabaseUse() {
         }
     }
 
+    fun updateFavorite(packageName: String,favorite: Int): DatabaseResult {
+        return try{
+            val dao = AppDataBase.getDatabase(NumApp.singletonContext()).appDao()
+            dao.updateFavorite(packageName,favorite)
+            DatabaseResult.Success(arrayListOf())
+        }catch (e:Exception){
+            DatabaseResult.Failed
+        }
+    }
+
 }
