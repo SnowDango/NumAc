@@ -51,6 +51,7 @@ dependencies {
     implementation(Dep.AndroidX.appCompatResource)
     implementation(Dep.AndroidX.constraintLayout)
     implementation(Dep.AndroidX.lifecycle)
+    implementation(Dep.AndroidX.viewModelKtx)
     implementation(Dep.AndroidX.core)
     //recyclerview
     implementation(Dep.AndroidX.recyclerView)

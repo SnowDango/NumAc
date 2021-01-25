@@ -3,6 +3,7 @@ package com.snowdango.numac.store.appview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.snowdango.numac.actions.applistdb.DatabaseAction
 import com.snowdango.numac.actions.applistdb.DatabaseActionState
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseAction
@@ -15,8 +16,6 @@ import com.snowdango.numac.actions.removeapp.RemoveAppAction
 import com.snowdango.numac.actions.removeapp.RemoveAppActionState
 import com.snowdango.numac.dispatcher.Dispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 
 class AppViewStore(private val dispatcher: Dispatcher):
         ViewModel(), Dispatcher.DatabaseActionListener, Dispatcher.RecentlyActionListener
@@ -27,8 +26,7 @@ class AppViewStore(private val dispatcher: Dispatcher):
         dispatcher.registerAppView(this,this,this,this,this)
     }
 
-    private val viewModelJob: Job = Job()
-    val viewModelCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob )
+    val viewModelCoroutineScope: CoroutineScope = viewModelScope
 
     val databaseActionData: LiveData<DatabaseActionState> = MutableLiveData<DatabaseActionState>().apply { value = DatabaseActionState.None }
     val recentlyActionData: LiveData<RecentlyAppDatabaseActionState> = MutableLiveData<RecentlyAppDatabaseActionState>().apply { value = RecentlyAppDatabaseActionState.None }

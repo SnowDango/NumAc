@@ -4,14 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.snowdango.numac.actions.applist.AppListAction
 import com.snowdango.numac.actions.applist.AppListActionState
 import com.snowdango.numac.actions.command.CommandAction
 import com.snowdango.numac.actions.command.CommandActionState
 import com.snowdango.numac.dispatcher.Dispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 
 class MainStore(private val dispatcher: Dispatcher):
         ViewModel(), Dispatcher.AppListActionListener,Dispatcher.CommandActionListener{
@@ -19,8 +18,7 @@ class MainStore(private val dispatcher: Dispatcher):
     init {
         dispatcher.registerMain(this,this)
     }
-    private val viewModelJob: Job = Job()
-    val viewModelsCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    val viewModelsCoroutineScope: CoroutineScope = viewModelScope
 
     val appListActionData: LiveData<AppListActionState> = MutableLiveData<AppListActionState>().apply { value = AppListActionState.None }
     val commandActionData: LiveData<CommandActionState> = MutableLiveData<CommandActionState>().apply { value = CommandActionState.None }
