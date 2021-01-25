@@ -132,9 +132,7 @@ class VisibleAppViewFragment: Fragment(), DataObserver {
         recentlyAppDatabaseActionCreator.executeGet()
     }
 
-    override fun changeFavoriteListener() = databaseActionCreator.getExecute()
-
-    override fun changeVisibleListener() = databaseActionCreator.getExecute()
+    override fun updateAppDataListener() = databaseActionCreator.getExecute()
 
     override fun searchViewListener(filter: String) {
         if (activityStore.databaseActionData.value is DatabaseActionState.Success) {
@@ -145,8 +143,7 @@ class VisibleAppViewFragment: Fragment(), DataObserver {
                 appItemController.setData(
                         filterData.toCollection(ArrayList()),
                         arrayListOf(),
-                        false
-                )
+                        false)
             }
         }
     }

@@ -97,14 +97,14 @@ class AppViewActivity: AppCompatActivity(){
         store.controlFavoriteData.observe(this, Observer {
             when(it){
                 is ControlFavoriteActionState.None -> return@Observer
-                is ControlFavoriteActionState.Success -> targetFragment.changeFavoriteListener()
+                is ControlFavoriteActionState.Success -> targetFragment.updateAppDataListener()
                 is ControlFavoriteActionState.Failed -> Toast.makeText(applicationContext,"database error", Toast.LENGTH_LONG).show()
             }
         })
         store.controlVisibleData.observe(this, Observer {
             when(it){
                 is ToggleVisibleActionState.None -> return@Observer
-                is ToggleVisibleActionState.Success -> targetFragment.changeVisibleListener()
+                is ToggleVisibleActionState.Success -> targetFragment.updateAppDataListener()
                 is ToggleVisibleActionState.Failed -> Toast.makeText(applicationContext,"database error", Toast.LENGTH_LONG).show()
             }
         })
