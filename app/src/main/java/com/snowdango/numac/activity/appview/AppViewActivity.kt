@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import android.widget.TextView
@@ -38,6 +39,7 @@ import com.snowdango.numac.actions.removeapp.RemoveAppActionState
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.android.synthetic.main.activity_appview.*
+import kotlinx.coroutines.cancel
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -48,13 +50,12 @@ import permissions.dispatcher.RuntimePermissions
 @RuntimePermissions
 class AppViewActivity: AppCompatActivity() {
 
-    private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
-    private val databaseActionCreator: AppListDatabaseActionCreator by inject { parametersOf(coroutineScope) }
-    private val recentlyAppDatabaseActionCreator: RecentlyAppDatabaseActionCreator by inject { parametersOf(coroutineScope) }
-    private val removeAppActionCreator: RemoveAppActionCreator by inject { parametersOf(coroutineScope) }
-    private val changeCommandActionCreator: ChangeCommandActionCreator by inject { parametersOf(coroutineScope) }
-    private val controlFavoriteActionCreator: ControlFavoriteActionCreator by inject { parametersOf(coroutineScope) }
     private val store: AppViewStore by viewModel()
+    private val databaseActionCreator: AppListDatabaseActionCreator by inject { parametersOf(store.viewModelCoroutineScope) }
+    private val recentlyAppDatabaseActionCreator: RecentlyAppDatabaseActionCreator by inject { parametersOf(store.viewModelCoroutineScope) }
+    private val removeAppActionCreator: RemoveAppActionCreator by inject { parametersOf(store.viewModelCoroutineScope) }
+    private val changeCommandActionCreator: ChangeCommandActionCreator by inject { parametersOf(store.viewModelCoroutineScope) }
+    private val controlFavoriteActionCreator: ControlFavoriteActionCreator by inject { parametersOf(store.viewModelCoroutineScope) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,8 +102,10 @@ class AppViewActivity: AppCompatActivity() {
 
     override fun onStart() {
         // databaseから持ってくる
-        if (store.databaseActionData.value !is DatabaseActionState.Success)
+        if (store.databaseActionData.value !is DatabaseActionState.Success) {
+            Log.d("Load","store don\'t have data")
             databaseActionCreator.getExecute()
+        }
         super.onStart()
     }
 
@@ -239,8 +242,6 @@ class AppViewActivity: AppCompatActivity() {
         popupMenu.show(this,view)
     }
 
-
-
     @NeedsPermission(Manifest.permission.REQUEST_DELETE_PACKAGES)
     fun uninstallPackage(packageName: String){
         val uninstallIntent = Intent(Intent.ACTION_DELETE,Uri.parse("package:${packageName}"))
@@ -293,7 +294,6 @@ class AppViewActivity: AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        coroutineScope.cancel()
         super.onDestroy()
     }
 }

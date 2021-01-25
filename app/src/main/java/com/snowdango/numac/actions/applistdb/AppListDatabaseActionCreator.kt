@@ -3,11 +3,12 @@ package com.snowdango.numac.actions.applistdb
 import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.domain.usecase.AppListDatabaseUse
 import com.snowdango.numac.utility.CancellableCoroutineScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AppListDatabaseActionCreator(
-        private val coroutineScope: CancellableCoroutineScope,
+        private val coroutineScope: CoroutineScope,
         private val dispatcher: Dispatcher,
         private val appListDatabaseUse: AppListDatabaseUse) {
 

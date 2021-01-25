@@ -14,6 +14,9 @@ import com.snowdango.numac.actions.controlfavorite.ControlFavoriteActionState
 import com.snowdango.numac.actions.removeapp.RemoveAppAction
 import com.snowdango.numac.actions.removeapp.RemoveAppActionState
 import com.snowdango.numac.dispatcher.Dispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
 class AppViewStore(private val dispatcher: Dispatcher):
         ViewModel(), Dispatcher.DatabaseActionListener, Dispatcher.RecentlyActionListener
@@ -23,6 +26,9 @@ class AppViewStore(private val dispatcher: Dispatcher):
     init {
         dispatcher.registerAppView(this,this,this,this,this)
     }
+
+    private val viewModelJob: Job = Job()
+    val viewModelCoroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob )
 
     val databaseActionData: LiveData<DatabaseActionState> = MutableLiveData<DatabaseActionState>().apply { value = DatabaseActionState.None }
     val recentlyActionData: LiveData<RecentlyAppDatabaseActionState> = MutableLiveData<RecentlyAppDatabaseActionState>().apply { value = RecentlyAppDatabaseActionState.None }

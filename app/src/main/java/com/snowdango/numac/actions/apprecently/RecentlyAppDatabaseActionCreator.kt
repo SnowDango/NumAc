@@ -4,11 +4,12 @@ import android.util.Log
 import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.domain.usecase.SaveRecentlyApp
 import com.snowdango.numac.utility.CancellableCoroutineScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RecentlyAppDatabaseActionCreator(
-        private val coroutineScope: CancellableCoroutineScope,
+        private val coroutineScope: CoroutineScope,
         private val dispatcher: Dispatcher,
         private val saveRecentlyApp: SaveRecentlyApp
 ) {

@@ -14,6 +14,7 @@ import com.snowdango.numac.domain.usecase.*
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.store.main.MainStore
 import com.snowdango.numac.utility.CancellableCoroutineScope
+import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -49,23 +50,23 @@ class NumApp: Application() {
     }
 
     private val mainActivityModule = module {
-        factory {(coroutineScope: CancellableCoroutineScope) ->
+        factory {(coroutineScope: CoroutineScope) ->
             AppListActionCreator(coroutineScope,get(), AppListCreate(), AppListDatabaseUse()) }
-        factory {(coroutineScope: CancellableCoroutineScope) ->
+        factory {(coroutineScope: CoroutineScope) ->
             CommandActionCreator(coroutineScope,get(), LaunchApp(), SharpCommandExecute(coroutineScope)) }
         viewModel { MainStore(get()) }
     }
 
     private val appViewModule = module {
-        factory { (coroutineScope: CancellableCoroutineScope) ->
+        factory { (coroutineScope: CoroutineScope) ->
             AppListDatabaseActionCreator(coroutineScope,get(), AppListDatabaseUse()) }
-        factory { (coroutineScope: CancellableCoroutineScope) ->
+        factory { (coroutineScope: CoroutineScope) ->
             RecentlyAppDatabaseActionCreator(coroutineScope,get(),SaveRecentlyApp()) }
-        factory {(coroutineScope: CancellableCoroutineScope) ->
+        factory {(coroutineScope: CoroutineScope) ->
             RemoveAppActionCreator(coroutineScope,get(),AppListDatabaseUse())}
-        factory {(coroutineScope: CancellableCoroutineScope) ->
+        factory {(coroutineScope: CoroutineScope) ->
             ChangeCommandActionCreator(coroutineScope,get(),AppListDatabaseUse()) }
-        factory {(coroutineScope: CancellableCoroutineScope) ->
+        factory {(coroutineScope: CoroutineScope) ->
             ControlFavoriteActionCreator(coroutineScope,get(),AppListDatabaseUse()) }
         viewModel { AppViewStore(get()) }
     }

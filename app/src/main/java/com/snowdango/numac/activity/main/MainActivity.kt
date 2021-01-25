@@ -1,9 +1,6 @@
 package com.snowdango.numac.activity.main
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.gms.oss.licenses.OssLicensesActivity
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.snowdango.numac.R
 import com.snowdango.numac.actions.applist.AppListActionCreator
@@ -30,10 +26,10 @@ import org.koin.core.parameter.parametersOf
 
 class MainActivity: AppCompatActivity() {
 
-    private val coroutineScope: CancellableCoroutineScope = CancellableCoroutineScope()
-    private val appListActionCreator: AppListActionCreator by inject{parametersOf(coroutineScope)}
-    private val commandActionCreator: CommandActionCreator by inject{parametersOf(coroutineScope)}
+    private val coroutineScope: CoroutineScope = CancellableCoroutineScope()
     private val store: MainStore by viewModel()
+    private val appListActionCreator: AppListActionCreator by inject{parametersOf(store.viewModelsCoroutineScope)}
+    private val commandActionCreator: CommandActionCreator by inject{parametersOf(store.viewModelsCoroutineScope)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +37,7 @@ class MainActivity: AppCompatActivity() {
 
         //ViewModelがリストを持っていなかった場合
         if(store.appListActionData.value !is AppListActionState.Success){
+            Log.d("Load","store don\'t have data")
             progressMaterialHorizontal.visibility = View.INVISIBLE
             loadData()
         }
