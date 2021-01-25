@@ -3,8 +3,9 @@ package com.snowdango.numac;
 import com.airbnb.epoxy.EpoxyDataBindingLayouts;
 
 @EpoxyDataBindingLayouts({
-    R.layout.button_item,
-    R.layout.app_item,
-    R.layout.app_item_header
-})
+    R.layout.epoxy_main_button,
+    R.layout.epoxy_visible_item,
+    R.layout.epoxy_visible_header,
+    R.layout.epoxy_invisible_item
+    })
 interface EpoxyConfig {}

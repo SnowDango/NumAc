@@ -1,16 +1,13 @@
-package com.snowdango.numac.activity.appview
+package com.snowdango.numac.activity.appview.visible
 
 import android.graphics.drawable.Drawable
 import android.view.View
 import com.airbnb.epoxy.Typed3EpoxyController
-import com.snowdango.numac.R
-import com.snowdango.numac.NumApp
-import com.snowdango.numac.appItem
-import com.snowdango.numac.appItemHeader
+import com.snowdango.numac.*
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
 
-class AppItemController(
+class VisibleAppItemController(
         private val appClickListener: AppClickListener,
         private val appLongClickListener: LongClickListener,
         private val verticalItemCount: Int
@@ -34,14 +31,14 @@ class AppItemController(
                     data2.add(RecentlyAppInfo(id = -1, packageName = "no recently${num + 1}"))
                 }
             }
-            appItemHeader {
+            epoxyVisibleHeader {
                 id("recentlyApp")
                 header("recently")
                 spanSizeOverride { _, _, _ -> verticalItemCount }
             }
             // recentlyのapp
             data2.forEach { appInfo ->
-                appItem {
+                epoxyVisibleItem {
                     id(appInfo.packageName)
                     if (appInfo.id != -1) {
                         val appIcon = getAppIcon(appInfo.packageName)
@@ -64,13 +61,13 @@ class AppItemController(
         }
         val favoriteList = data.filter { it.favorite == 1 }
         if(favoriteList.isNotEmpty()){
-            appItemHeader {
+            epoxyVisibleHeader {
                 id("favoriteApp")
                 header("favorite")
                 spanSizeOverride{_,_,_ -> verticalItemCount}
             }
             favoriteList.forEach {appInfo ->
-                appItem {
+                epoxyInvisibleItem {
                     id(appInfo.packageName)
                     val appIcon = getAppIcon(appInfo.packageName)
                     appIcon?.let { appIcon(it) }
@@ -86,14 +83,14 @@ class AppItemController(
                 }
             }
         }
-        appItemHeader {
+        epoxyVisibleHeader {
             id("otherApp")
             header("other")
             spanSizeOverride { _, _, _ -> verticalItemCount}
         }
         // recently以外のapp
         data.forEach { appInfo ->
-            appItem {
+            epoxyInvisibleItem {
                 id(appInfo.packageName)
                 val appIcon = getAppIcon(appInfo.packageName)
                 appIcon?.let { appIcon(it) }

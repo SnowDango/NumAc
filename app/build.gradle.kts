@@ -37,6 +37,9 @@ android {
         targetCompatibility =  JavaVersion.VERSION_1_8
     }
     buildFeatures.dataBinding = true
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -52,6 +55,7 @@ dependencies {
     implementation(Dep.AndroidX.constraintLayout)
     implementation(Dep.AndroidX.lifecycle)
     implementation(Dep.AndroidX.viewModelKtx)
+    implementation(Dep.AndroidX.viewModelFragment)
     implementation(Dep.AndroidX.core)
     //recyclerview
     implementation(Dep.AndroidX.recyclerView)

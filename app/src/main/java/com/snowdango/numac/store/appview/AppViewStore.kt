@@ -14,16 +14,20 @@ import com.snowdango.numac.actions.controlfavorite.ControlFavoriteAction
 import com.snowdango.numac.actions.controlfavorite.ControlFavoriteActionState
 import com.snowdango.numac.actions.removeapp.RemoveAppAction
 import com.snowdango.numac.actions.removeapp.RemoveAppActionState
+import com.snowdango.numac.actions.visible.ToggleVisibleAction
+import com.snowdango.numac.actions.visible.ToggleVisibleActionState
 import com.snowdango.numac.dispatcher.Dispatcher
 import kotlinx.coroutines.CoroutineScope
 
 class AppViewStore(private val dispatcher: Dispatcher):
         ViewModel(), Dispatcher.DatabaseActionListener, Dispatcher.RecentlyActionListener
         ,Dispatcher.RemoveAppActionListener,Dispatcher.ChangeCommandActionListener,
-        Dispatcher.ControlFavoriteActionListener{
+        Dispatcher.ControlFavoriteActionListener, Dispatcher.ControlVisibleActionListener{
 
     init {
-        dispatcher.registerAppView(this,this,this,this,this)
+        dispatcher.registerAppView(this,this,
+                this,this,
+                this,this)
     }
 
     val viewModelCoroutineScope: CoroutineScope = viewModelScope
@@ -33,6 +37,7 @@ class AppViewStore(private val dispatcher: Dispatcher):
     val removeActionData: LiveData<RemoveAppActionState> = MutableLiveData<RemoveAppActionState>().apply { value = RemoveAppActionState.None }
     val changeCommandData: LiveData<ChangeCommandActionState> = MutableLiveData<ChangeCommandActionState>().apply { value = ChangeCommandActionState.None }
     val controlFavoriteData: LiveData<ControlFavoriteActionState> = MutableLiveData<ControlFavoriteActionState>().apply { value = ControlFavoriteActionState.None }
+    val controlVisibleData: LiveData<ToggleVisibleActionState> = MutableLiveData<ToggleVisibleActionState>().apply { value = ToggleVisibleActionState.None }
 
 
     private fun updateDatabase(action: DatabaseAction) {
@@ -55,6 +60,10 @@ class AppViewStore(private val dispatcher: Dispatcher):
         (controlFavoriteData as MutableLiveData<ControlFavoriteActionState>).value = action.state
     }
 
+    private fun updateControlVisible(action: ToggleVisibleAction){
+        (controlVisibleData as MutableLiveData<ToggleVisibleActionState>).value = action.state
+    }
+
     override fun on(action: RecentlyAppDatabaseAction) = updateRecently(action)
 
     override fun on(action: DatabaseAction) = updateDatabase(action)
@@ -65,9 +74,14 @@ class AppViewStore(private val dispatcher: Dispatcher):
 
     override fun on(action: ControlFavoriteAction) = updateControlFavorite(action)
 
+    override fun on(action: ToggleVisibleAction) = updateControlVisible(action)
+
     override fun onCleared() {
         super.onCleared()
-        dispatcher.unregisterAppView(this,this,this,this,this)
+        dispatcher.unregisterAppView(
+                this,this,
+                this,this,
+                this,this)
     }
 
 }

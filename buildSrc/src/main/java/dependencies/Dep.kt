@@ -9,6 +9,7 @@ object Dep {
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
         const val lifecycle = "androidx.lifecycle:lifecycle-extensions:2.2.0"
         const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+        const val viewModelFragment = "androidx.fragment:fragment-ktx:1.2.4"
         const val core = "androidx.core:core-ktx:1.3.2"
 
         //add libs

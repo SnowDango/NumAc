@@ -25,6 +25,7 @@ class AppListCreate {
                             pckInfo.applicationInfo.loadLabel(pm) as String,
                             pckInfo.packageName,
                             newCommand,
+                            0,
                             0
                     ))
                     commandAlreadyList.add(newCommand)

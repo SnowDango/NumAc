@@ -8,6 +8,8 @@ import com.snowdango.numac.actions.changecommnad.ChangeCommandAction
 import com.snowdango.numac.actions.command.CommandAction
 import com.snowdango.numac.actions.controlfavorite.ControlFavoriteAction
 import com.snowdango.numac.actions.removeapp.RemoveAppAction
+import com.snowdango.numac.actions.visible.ToggleVisibleAction
+import com.snowdango.numac.actions.visible.ToggleVisibleActionState
 import java.util.*
 
 class Dispatcher {
@@ -19,6 +21,7 @@ class Dispatcher {
     private val removeListeners = Collections.synchronizedList(mutableListOf<RemoveAppActionListener>())
     private val changeCommandListener = Collections.synchronizedList(mutableListOf<ChangeCommandActionListener>())
     private val controlFavoriteListener = Collections.synchronizedList(mutableListOf<ControlFavoriteActionListener>())
+    private val controlVisibleListener = Collections.synchronizedList(mutableListOf<ControlVisibleActionListener>())
 
     interface AppListActionListener {
         fun on(action: AppListAction)
@@ -46,6 +49,10 @@ class Dispatcher {
 
     interface ControlFavoriteActionListener{
         fun on(action:ControlFavoriteAction)
+    }
+
+    interface ControlVisibleActionListener{
+        fun on(action: ToggleVisibleAction)
     }
 
     fun dispatchDatabase(action: DatabaseAction) {
@@ -82,6 +89,11 @@ class Dispatcher {
         controlFavoriteListener.forEach{ it.on(action) }
     }
 
+    fun dispatchVisibleControl(action: ToggleVisibleAction){
+        Log.d("dispatch","control visible")
+        controlVisibleListener.forEach { it.on(action) }
+    }
+
     fun registerMain(listenerAppList: AppListActionListener,
                  listenerCommand: CommandActionListener) {
         Log.d(TAG,"registerMain")
@@ -93,13 +105,15 @@ class Dispatcher {
                         listenerRecentlyActionListener: RecentlyActionListener,
                         listenerRemoveAppActionListener: RemoveAppActionListener,
                         listenerChangeCommandActionListener: ChangeCommandActionListener,
-                        listenerControlFavoriteActionListener: ControlFavoriteActionListener){
+                        listenerControlFavoriteActionListener: ControlFavoriteActionListener,
+                        listenerControlVisibleActionListener: ControlVisibleActionListener){
         Log.d(TAG,"registerAppView")
         databaseListeners.add(listenerDatabaseActionListener)
         recentlyListeners.add(listenerRecentlyActionListener)
         removeListeners.add(listenerRemoveAppActionListener)
         changeCommandListener.add(listenerChangeCommandActionListener)
         controlFavoriteListener.add(listenerControlFavoriteActionListener)
+        controlVisibleListener.add(listenerControlVisibleActionListener)
     }
 
     fun unregisterMain(listenerAppList: AppListActionListener,
@@ -113,13 +127,15 @@ class Dispatcher {
                           listenerRecentlyListener: RecentlyActionListener,
                           listenerRemoveAppActionListener: RemoveAppActionListener,
                           listenerChangeCommandActionListener: ChangeCommandActionListener,
-                          listenerControlFavoriteActionListener: ControlFavoriteActionListener){
+                          listenerControlFavoriteActionListener: ControlFavoriteActionListener,
+                          listenerControlVisibleActionListener: ControlVisibleActionListener){
         Log.d(TAG,"unregisterAppView")
         databaseListeners.remove(listenerDatabaseListener)
         recentlyListeners.remove(listenerRecentlyListener)
         removeListeners.remove(listenerRemoveAppActionListener)
         changeCommandListener.remove(listenerChangeCommandActionListener)
         controlFavoriteListener.remove(listenerControlFavoriteActionListener)
+        controlVisibleListener.remove(listenerControlVisibleActionListener)
     }
 
     companion object {

@@ -2,7 +2,6 @@ package com.snowdango.numac
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import com.snowdango.numac.actions.applist.AppListActionCreator
 import com.snowdango.numac.actions.applistdb.AppListDatabaseActionCreator
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseActionCreator
@@ -10,16 +9,14 @@ import com.snowdango.numac.actions.changecommnad.ChangeCommandActionCreator
 import com.snowdango.numac.actions.command.CommandActionCreator
 import com.snowdango.numac.actions.controlfavorite.ControlFavoriteActionCreator
 import com.snowdango.numac.actions.removeapp.RemoveAppActionCreator
+import com.snowdango.numac.actions.visible.ToggleVisibleActionCreator
 import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.domain.usecase.*
 import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.store.main.MainStore
-import com.snowdango.numac.utility.CancellableCoroutineScope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
-import org.koin.android.viewmodel.getViewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -61,6 +58,8 @@ class NumApp: Application() {
     }
 
     private val appViewModule = module {
+        factory { (coroutineScope: CoroutineScope) ->
+            ToggleVisibleActionCreator(coroutineScope,get(),AppListDatabaseUse())}
         factory { (coroutineScope: CoroutineScope) ->
             AppListDatabaseActionCreator(coroutineScope,get(), AppListDatabaseUse()) }
         factory { (coroutineScope: CoroutineScope) ->

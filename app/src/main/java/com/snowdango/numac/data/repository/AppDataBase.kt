@@ -12,7 +12,7 @@ import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
 
 
-@Database(entities = [AppInfo::class, RecentlyAppInfo::class], version = 2, exportSchema = false)
+@Database(entities = [AppInfo::class, RecentlyAppInfo::class], version = 3, exportSchema = false)
 abstract class AppDataBase: RoomDatabase() {
 
     abstract fun appDao(): AppDao
@@ -26,7 +26,7 @@ abstract class AppDataBase: RoomDatabase() {
                     INSTANCE = Room.databaseBuilder(
                             context.applicationContext,
                             AppDataBase::class.java, "num_activity"
-                    ).addMigrations(migration1_2).build()
+                    ).addMigrations(migration1_2).addMigrations(migration2_3).build()
                 }
             }
             return INSTANCE!!
@@ -34,6 +34,11 @@ abstract class AppDataBase: RoomDatabase() {
         private val migration1_2 = object : Migration(1,2){
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("alter table `app-info` add column 'favorite' INTEGER  not null default 0 ")
+            }
+        }
+        private val migration2_3 = object : Migration(2,3){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("alter table `app-info` add column 'visible' INTEGER not null default 0 ")
             }
         }
     }

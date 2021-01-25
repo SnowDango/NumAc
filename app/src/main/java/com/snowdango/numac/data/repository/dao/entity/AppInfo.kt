@@ -17,5 +17,8 @@ data class AppInfo(
         @ColumnInfo(name = "command")
         var command: String,
         @ColumnInfo(name = "favorite")
-        var favorite: Int
+        var favorite: Int,
+        @ColumnInfo(name = "visible")
+        var visible: Int
+
 )
