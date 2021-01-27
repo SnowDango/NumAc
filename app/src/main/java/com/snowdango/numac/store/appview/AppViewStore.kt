@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.snowdango.numac.actions.appinvisiblelist.AppInvisibleListDatabaseAction
+import com.snowdango.numac.actions.appinvisiblelist.AppInvisibleListDatabaseActionState
 import com.snowdango.numac.actions.applistdb.DatabaseAction
 import com.snowdango.numac.actions.applistdb.DatabaseActionState
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseAction
@@ -22,17 +24,19 @@ import kotlinx.coroutines.CoroutineScope
 class AppViewStore(private val dispatcher: Dispatcher):
         ViewModel(), Dispatcher.DatabaseActionListener, Dispatcher.RecentlyActionListener
         ,Dispatcher.RemoveAppActionListener,Dispatcher.ChangeCommandActionListener,
-        Dispatcher.ControlFavoriteActionListener, Dispatcher.ControlVisibleActionListener{
+        Dispatcher.ControlFavoriteActionListener, Dispatcher.ControlVisibleActionListener,
+        Dispatcher.AppInvisibleListListener{
 
     init {
         dispatcher.registerAppView(this,this,
                 this,this,
-                this,this)
+                this,this,this)
     }
 
     val viewModelCoroutineScope: CoroutineScope = viewModelScope
 
     val databaseActionData: LiveData<DatabaseActionState> = MutableLiveData<DatabaseActionState>().apply { value = DatabaseActionState.None }
+    val invisibleAppActionData: LiveData<AppInvisibleListDatabaseActionState> = MutableLiveData<AppInvisibleListDatabaseActionState>().apply { value = AppInvisibleListDatabaseActionState.None }
     val recentlyActionData: LiveData<RecentlyAppDatabaseActionState> = MutableLiveData<RecentlyAppDatabaseActionState>().apply { value = RecentlyAppDatabaseActionState.None }
     val removeActionData: LiveData<RemoveAppActionState> = MutableLiveData<RemoveAppActionState>().apply { value = RemoveAppActionState.None }
     val changeCommandData: LiveData<ChangeCommandActionState> = MutableLiveData<ChangeCommandActionState>().apply { value = ChangeCommandActionState.None }
@@ -42,6 +46,10 @@ class AppViewStore(private val dispatcher: Dispatcher):
 
     private fun updateDatabase(action: DatabaseAction) {
         (databaseActionData as MutableLiveData<DatabaseActionState>).value = action.state
+    }
+
+    private fun updateAppInvisible(action: AppInvisibleListDatabaseAction){
+        (invisibleAppActionData as MutableLiveData<AppInvisibleListDatabaseActionState>).value = action.state
     }
 
     private fun updateRecently(action: RecentlyAppDatabaseAction) {
@@ -66,6 +74,8 @@ class AppViewStore(private val dispatcher: Dispatcher):
 
     override fun on(action: RecentlyAppDatabaseAction) = updateRecently(action)
 
+    override fun on(action: AppInvisibleListDatabaseAction) = updateAppInvisible(action)
+
     override fun on(action: DatabaseAction) = updateDatabase(action)
 
     override fun on(action: RemoveAppAction) = updateRemoveApp(action)
@@ -81,7 +91,7 @@ class AppViewStore(private val dispatcher: Dispatcher):
         dispatcher.unregisterAppView(
                 this,this,
                 this,this,
-                this,this)
+                this,this,this)
     }
 
 }

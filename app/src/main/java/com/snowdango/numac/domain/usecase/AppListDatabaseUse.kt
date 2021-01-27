@@ -36,6 +36,16 @@ class AppListDatabaseUse() {
         }
     }
 
+    fun getAppInVisibleList(): DatabaseResult{
+        return try {
+            val dao = AppDataBase.getDatabase(NumApp.singletonContext()).appDao()
+            val visibleList = dao.getUnVisibleList().toCollection(ArrayList())
+            DatabaseResult.Success(visibleList)
+        }catch (e: Exception){
+            DatabaseResult.Failed
+        }
+    }
+
     fun removeApp(packageName: String): DatabaseResult{
         return try{
             val appDao = AppDataBase.getDatabase(NumApp.singletonContext()).appDao()
@@ -74,6 +84,11 @@ class AppListDatabaseUse() {
             val visibleType: List<AppInfo> = dao.getAppInfoByPackageName(packageName)
             val updateVisibleType = if(visibleType[0].visible == 0) 1 else 0
             dao.updateVisibleTypePackageName(updateVisibleType, packageName)
+            val recentlyDao = AppDataBase.getDatabase(NumApp.singletonContext()).recentlyDao()
+            val recentlyList = recentlyDao.getAll()
+            if(recentlyList.find { it.packageName == packageName } != null){
+                recentlyDao.deleteAtPackageName(packageName)
+            }
             DatabaseResult.Success(arrayListOf())
         }catch (e:Exception){
             DatabaseResult.Failed

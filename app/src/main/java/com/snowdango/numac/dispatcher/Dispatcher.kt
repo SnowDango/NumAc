@@ -1,6 +1,7 @@
 package com.snowdango.numac.dispatcher
 
 import android.util.Log
+import com.snowdango.numac.actions.appinvisiblelist.AppInvisibleListDatabaseAction
 import com.snowdango.numac.actions.applist.AppListAction
 import com.snowdango.numac.actions.applistdb.DatabaseAction
 import com.snowdango.numac.actions.apprecently.RecentlyAppDatabaseAction
@@ -9,12 +10,12 @@ import com.snowdango.numac.actions.command.CommandAction
 import com.snowdango.numac.actions.controlfavorite.ControlFavoriteAction
 import com.snowdango.numac.actions.removeapp.RemoveAppAction
 import com.snowdango.numac.actions.visible.ToggleVisibleAction
-import com.snowdango.numac.actions.visible.ToggleVisibleActionState
 import java.util.*
 
 class Dispatcher {
 
     private val appListListeners = Collections.synchronizedList(mutableListOf<AppListActionListener>())
+    private val appInVisibleListListener = Collections.synchronizedList(mutableListOf<AppInvisibleListListener>())
     private val commandListeners = Collections.synchronizedList(mutableListOf<CommandActionListener>())
     private val databaseListeners = Collections.synchronizedList(mutableListOf<DatabaseActionListener>())
     private val recentlyListeners = Collections.synchronizedList(mutableListOf<RecentlyActionListener>())
@@ -25,6 +26,10 @@ class Dispatcher {
 
     interface AppListActionListener {
         fun on(action: AppListAction)
+    }
+
+    interface AppInvisibleListListener{
+        fun on(action: AppInvisibleListDatabaseAction)
     }
 
     interface CommandActionListener{
@@ -58,6 +63,11 @@ class Dispatcher {
     fun dispatchDatabase(action: DatabaseAction) {
         Log.d("dispatcher", "database")
         databaseListeners.forEach { it.on(action) }
+    }
+
+    fun dispatchInVisibleDb(action: AppInvisibleListDatabaseAction){
+        Log.d("dispatcher", "invisible")
+        appInVisibleListListener.forEach{ it.on(action) }
     }
 
     fun dispatchRecently(action: RecentlyAppDatabaseAction){
@@ -106,9 +116,11 @@ class Dispatcher {
                         listenerRemoveAppActionListener: RemoveAppActionListener,
                         listenerChangeCommandActionListener: ChangeCommandActionListener,
                         listenerControlFavoriteActionListener: ControlFavoriteActionListener,
-                        listenerControlVisibleActionListener: ControlVisibleActionListener){
+                        listenerControlVisibleActionListener: ControlVisibleActionListener,
+                        listenerAppInvisibleListListener: AppInvisibleListListener){
         Log.d(TAG,"registerAppView")
         databaseListeners.add(listenerDatabaseActionListener)
+        appInVisibleListListener.add(listenerAppInvisibleListListener)
         recentlyListeners.add(listenerRecentlyActionListener)
         removeListeners.add(listenerRemoveAppActionListener)
         changeCommandListener.add(listenerChangeCommandActionListener)
@@ -128,9 +140,12 @@ class Dispatcher {
                           listenerRemoveAppActionListener: RemoveAppActionListener,
                           listenerChangeCommandActionListener: ChangeCommandActionListener,
                           listenerControlFavoriteActionListener: ControlFavoriteActionListener,
-                          listenerControlVisibleActionListener: ControlVisibleActionListener){
+                          listenerControlVisibleActionListener: ControlVisibleActionListener,
+                          listenerAppInvisibleListListener: AppInvisibleListListener){
+
         Log.d(TAG,"unregisterAppView")
         databaseListeners.remove(listenerDatabaseListener)
+        appInVisibleListListener.remove(listenerAppInvisibleListListener)
         recentlyListeners.remove(listenerRecentlyListener)
         removeListeners.remove(listenerRemoveAppActionListener)
         changeCommandListener.remove(listenerChangeCommandActionListener)

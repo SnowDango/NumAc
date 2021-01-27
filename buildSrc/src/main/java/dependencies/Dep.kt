@@ -70,7 +70,6 @@ object Dep {
     object Afollestad {
         private const val materialDialogVersion = "3.3.0"
         const val materialDialogInput = "com.afollestad.material-dialogs:input:${materialDialogVersion}"
-
     }
 
     object PermissionsDispatcher {
@@ -82,5 +81,15 @@ object Dep {
     object GoogleGMS{
         private const val ossLicensesVersion = "11.6.0"
         const val ossLicenses = "com.google.android.gms:play-services-oss-licenses:${ossLicensesVersion}"
+    }
+
+    object NCapdevi{
+        private const val fragNavVersion = "3.2.0"
+        const val fragNav = "com.ncapdevi:frag-nav:${fragNavVersion}"
+    }
+
+    object JustKiddingBaby{
+        private const val fragRiggeVersion = "1.4.4"
+        const val fragRigger = "com.justkiddingbaby:fragment-rigger:${fragRiggeVersion}"
     }
 }

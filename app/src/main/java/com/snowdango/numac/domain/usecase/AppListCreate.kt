@@ -2,6 +2,7 @@ package com.snowdango.numac.domain.usecase
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.util.Log
 import com.snowdango.numac.NumApp
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 

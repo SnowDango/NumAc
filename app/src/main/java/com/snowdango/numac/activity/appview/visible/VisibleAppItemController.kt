@@ -1,11 +1,17 @@
 package com.snowdango.numac.activity.appview.visible
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import com.airbnb.epoxy.Typed3EpoxyController
 import com.snowdango.numac.*
 import com.snowdango.numac.data.repository.dao.entity.AppInfo
 import com.snowdango.numac.data.repository.dao.entity.RecentlyAppInfo
+import java.lang.Exception
 
 class VisibleAppItemController(
         private val appClickListener: AppClickListener,
@@ -14,7 +20,8 @@ class VisibleAppItemController(
 ): Typed3EpoxyController<ArrayList<AppInfo>, ArrayList<RecentlyAppInfo>, Boolean>(){
 
     private val recentlyAppSize: Int = 4
-    private val pm = NumApp.singletonContext().packageManager
+    val pm =  NumApp.singletonContext().packageManager
+    val pckInfoList: List<PackageInfo> = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES)
 
     interface AppClickListener {
         fun appClickListener(packageName: String)
@@ -43,16 +50,22 @@ class VisibleAppItemController(
                     if (appInfo.id != -1) {
                         val appIcon = getAppIcon(appInfo.packageName)
                         appIcon(appIcon)
-                        val recentlyApp = data?.find { it.packageName == appInfo.packageName }
-                        appName(recentlyApp?.appName)
-                        appCommand(recentlyApp?.command)
-                        appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
-                        appOnLongClickListener(View.OnLongClickListener {
-                            recentlyApp?.let { app -> appLongClickListener.longClickListener(appIcon!!, app.appName, appInfo.packageName, app.command, it) }!!
-                        })
+                        val recentlyApp = data.find { it.packageName == appInfo.packageName }
+                        if (recentlyApp != null) {
+                            appName(recentlyApp.appName)
+                            appCommand(recentlyApp.command)
+                            appOnClickListener(View.OnClickListener { appClickListener.appClickListener(appInfo.packageName) })
+                            appOnLongClickListener(View.OnLongClickListener {
+                                recentlyApp.let { app -> appLongClickListener.longClickListener(appIcon!!, app.appName, appInfo.packageName, app.command, it) }!!
+                            })
+                        }else{
+                            appIcon(NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp))
+                            appName("this app is invisible type")
+                            appCommand(StringBuilder().toString())
+                        }
                     } else {
                         appIcon(NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp))
-                        appName(appInfo.packageName)
+                        appName("this app was uninstalled")
                         appCommand(StringBuilder().toString())
                     }
                     spanSizeOverride{_,_,_ -> verticalItemCount/4}
@@ -109,9 +122,11 @@ class VisibleAppItemController(
 
     private fun getAppIcon(packageName: String):Drawable?{
         return try{
-            pm.getApplicationIcon(packageName)
-        }catch (e:java.lang.Exception){
-            NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp)!!
+            val pckInfo = pm.getPackageInfo(packageName,0)
+            pckInfo.applicationInfo.loadUnbadgedIcon(pm)
+        }catch (e: Exception){
+            Log.e("icon", "$packageName -> ${e.toString()}")
+            NumApp.singletonContext().getDrawable(R.drawable.ic_android_black_108dp)
         }
     }
 

@@ -97,6 +97,9 @@ dependencies {
 
     //materialDialog
     implementation(Dep.Afollestad.materialDialogInput)
+
+    //fragNav
+    implementation(Dep.NCapdevi.fragNav)
 }
 repositories {
     mavenCentral()
