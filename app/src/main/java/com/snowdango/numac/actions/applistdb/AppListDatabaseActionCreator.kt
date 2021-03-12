@@ -1,5 +1,6 @@
 package com.snowdango.numac.actions.applistdb
 
+import android.util.Log
 import com.snowdango.numac.dispatcher.Dispatcher
 import com.snowdango.numac.domain.usecase.AppListDatabaseUse
 import kotlinx.coroutines.CoroutineScope
@@ -18,12 +19,16 @@ class AppListDatabaseActionCreator(
     }
 
     private suspend fun createAction(){
-        val action = when(val result = appListDatabaseUse.getAppVisibleList()){
-            is AppListDatabaseUse.DatabaseResult.Success -> DatabaseAction(DatabaseActionState.Success(result.appList))
-            is AppListDatabaseUse.DatabaseResult.Failed -> DatabaseAction(DatabaseActionState.Failed)
-        }
-        coroutineScope.launch(Dispatchers.Main){
-            dispatcher.dispatchDatabase(action)
+        try {
+            val action = when (val result = appListDatabaseUse.getAppVisibleList()) {
+                is AppListDatabaseUse.DatabaseResult.Success -> DatabaseAction(DatabaseActionState.Success(result.appList))
+                is AppListDatabaseUse.DatabaseResult.Failed -> DatabaseAction(DatabaseActionState.Failed)
+            }
+            coroutineScope.launch(Dispatchers.Main) {
+                dispatcher.dispatchDatabase(action)
+            }
+        }catch (e: Exception){
+            Log.e("data action", e.toString())
         }
     }
 }

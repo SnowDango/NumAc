@@ -64,9 +64,6 @@ class AppViewActivity: AppCompatActivity(), View.OnClickListener, CommandChangeL
             )
             it.initialize(FragNavController.TAB1,savedInstanceState)
         }
-
-        onSetSearchTextObserver()
-        onSetActionObserver()
     }
 
     private fun onSetSearchTextObserver(){
@@ -161,6 +158,16 @@ class AppViewActivity: AppCompatActivity(), View.OnClickListener, CommandChangeL
         store.controlVisibleData.observe(this, controlVisibleActionObserver)
     }
 
+    private fun onRemoveActionObserver(){
+        store.databaseActionData.removeObservers(this)
+        store.recentlyActionData.removeObservers(this)
+        store.invisibleAppActionData.removeObservers(this)
+        store.removeActionData.removeObservers(this)
+        store.changeCommandData.removeObservers(this)
+        store.controlFavoriteData.removeObservers(this)
+        store.controlVisibleData.removeObservers(this)
+    }
+
     override fun onResume() {
         val intentFilter = IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_REMOVED)
@@ -168,6 +175,12 @@ class AppViewActivity: AppCompatActivity(), View.OnClickListener, CommandChangeL
         }
         registerReceiver(uninstallEvent, intentFilter)
         super.onResume()
+    }
+
+    override fun onResumeFragments() {
+        onSetSearchTextObserver()
+        onSetActionObserver()
+        super.onResumeFragments()
     }
 
     override fun onClick(p0: View?) {
@@ -222,6 +235,7 @@ class AppViewActivity: AppCompatActivity(), View.OnClickListener, CommandChangeL
     }
 
     override fun onDestroy() {
+        onRemoveActionObserver()
         super.onDestroy()
     }
 }

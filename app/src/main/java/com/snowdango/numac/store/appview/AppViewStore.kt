@@ -1,9 +1,6 @@
 package com.snowdango.numac.store.appview
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.snowdango.numac.actions.appinvisiblelist.AppInvisibleListDatabaseAction
 import com.snowdango.numac.actions.appinvisiblelist.AppInvisibleListDatabaseActionState
 import com.snowdango.numac.actions.applistdb.DatabaseAction
@@ -93,5 +90,4 @@ class AppViewStore(private val dispatcher: Dispatcher):
                 this,this,
                 this,this,this)
     }
-
 }

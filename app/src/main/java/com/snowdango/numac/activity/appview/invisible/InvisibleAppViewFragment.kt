@@ -36,7 +36,7 @@ import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
 
 @RuntimePermissions
-class InvisibleAppViewFragment: Fragment(),DataObserver {
+class InvisibleAppViewFragment: Fragment(), DataObserver{
 
     private val activityStore: AppViewStore by sharedViewModel()
     private val databaseActionCreator: AppListDatabaseActionCreator by inject { parametersOf(activityStore.viewModelCoroutineScope) } // databaseから持ってくる

@@ -2,7 +2,9 @@ package com.snowdango.numac
 
 import android.app.Application
 import android.content.Context
+import android.view.View
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 import com.ncapdevi.fragnav.FragNavController
 import com.snowdango.numac.actions.appinvisiblelist.AppInvisibleListDatabaseActionCreator
 import com.snowdango.numac.actions.applist.AppListActionCreator
@@ -22,7 +24,10 @@ import com.snowdango.numac.store.appview.AppViewStore
 import com.snowdango.numac.store.main.MainStore
 import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.viewmodel.ViewModelParameters
 import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.android.viewmodel.getViewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -64,6 +69,7 @@ class NumApp: Application() {
     }
 
     private val appViewModule = module {
+        viewModel { AppViewStore(get()) }
         factory { (fragmentManager: FragmentManager,id: Int) -> FragNavController(fragmentManager,id)  }
         factory { VisibleAppViewFragment() }
         factory { InvisibleAppViewFragment() }
@@ -81,6 +87,5 @@ class NumApp: Application() {
             ChangeCommandActionCreator(coroutineScope,get(),AppListDatabaseUse()) }
         factory {(coroutineScope: CoroutineScope) ->
             ControlFavoriteActionCreator(coroutineScope,get(),AppListDatabaseUse()) }
-        viewModel { AppViewStore(get()) }
     }
 }

@@ -1,6 +1,7 @@
 package com.snowdango.numac.activity.appview.visible
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -73,8 +74,6 @@ class VisibleAppViewFragment: Fragment(), DataObserver {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         appItemController.setFilterDuplicates(true)
         recyclerViewVisibleApp.also { epoxyRecyclerView ->
             epoxyRecyclerView.adapter = appItemController.adapter
@@ -84,12 +83,19 @@ class VisibleAppViewFragment: Fragment(), DataObserver {
             }
         }
 
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onAttach(context: Context) {
         if(activityStore.databaseActionData.value is DatabaseActionState.Success)
             if(activityStore.recentlyActionData.value is RecentlyAppDatabaseActionState.Success)
                 appItemController.setData(
                         (activityStore.databaseActionData.value as DatabaseActionState.Success).appList,
                         (activityStore.recentlyActionData.value as RecentlyAppDatabaseActionState.Success).recentlyList,
                         true)
+
+        Log.d("view model error", "attach")
+        super.onAttach(context)
     }
 
     override fun onStart() {
@@ -121,7 +127,14 @@ class VisibleAppViewFragment: Fragment(), DataObserver {
         recentlyAppDatabaseActionCreator.executeGet()
     }
 
-    override fun updateFavoriteListener() = databaseActionCreator.getExecute()
+    override fun updateFavoriteListener(){
+        try {
+            databaseActionCreator.getExecute()
+        }catch (e:Exception){
+            Log.d("view model error", " not found view model")
+        }
+    }
+
     override fun updateVisibleListener() {
         databaseActionCreator.getExecute()
         appInvisibleListDatabaseActionCreator.execute()
@@ -199,5 +212,20 @@ class VisibleAppViewFragment: Fragment(), DataObserver {
     @OnPermissionDenied(Manifest.permission.REQUEST_DELETE_PACKAGES)
     fun deletePackagePermissionDenied(){
         Toast.makeText(activity?.applicationContext, """Can not delete | Need Permission """.trimMargin(), Toast.LENGTH_LONG).show()
+    }
+
+    override fun onDetach() {
+        Log.d("view model error", "detach")
+        super.onDetach()
+    }
+
+    override fun onDestroyView() {
+        Log.d("view model error", "destroy view")
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        Log.d("view model error", "destroy")
+        super.onDestroy()
     }
 }
