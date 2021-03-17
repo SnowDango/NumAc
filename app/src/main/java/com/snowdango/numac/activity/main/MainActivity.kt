@@ -24,26 +24,26 @@ import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val coroutineScope: CoroutineScope = CancellableCoroutineScope()
     private val store: MainStore by viewModel()
-    private val appListActionCreator: AppListActionCreator by inject{parametersOf(store.viewModelsCoroutineScope)}
-    private val commandActionCreator: CommandActionCreator by inject{parametersOf(store.viewModelsCoroutineScope)}
-
+    private val appListActionCreator: AppListActionCreator by inject { parametersOf(store.viewModelsCoroutineScope) }
+    private val commandActionCreator: CommandActionCreator by inject { parametersOf(store.viewModelsCoroutineScope) }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //ViewModelがリストを持っていなかった場合
-        if(store.appListActionData.value !is AppListActionState.Success){
-            Log.d("Load","store don\'t have data")
+        if (store.appListActionData.value !is AppListActionState.Success) {
+            Log.d("Load", "store don\'t have data")
             progressMaterialHorizontal.visibility = View.INVISIBLE
             loadData()
         }
 
         // epoxy関係
-        val mainButtonController = MainButtonController( object : MainButtonController.ClickListener{
+        val mainButtonController = MainButtonController(object : MainButtonController.ClickListener {
             override fun itemClickListener(string: String) {
                 checkText(string)
             }
@@ -60,7 +60,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     // dataの取得
-    private fun loadData(){
+    private fun loadData() {
         appListActionCreator.execute()
         textView.text = getString(R.string.wait_text)
         progressMaterialHorizontal.visibility = View.VISIBLE
@@ -77,10 +77,10 @@ class MainActivity: AppCompatActivity() {
     }
 
     // storeのobserver
-    private fun observeValue(){
+    private fun observeValue() {
         val appListActionDataObserver = Observer<AppListActionState> {
-            when(it){
-                is AppListActionState.Failed -> Toast.makeText(this,"AppListAction Failed",Toast.LENGTH_SHORT).show()
+            when (it) {
+                is AppListActionState.Failed -> Toast.makeText(this, "AppListAction Failed", Toast.LENGTH_SHORT).show()
                 is AppListActionState.Success -> {
                     progressMaterialHorizontal.visibility = View.INVISIBLE
                     textView.text = getString(R.string.please_push_number)
@@ -89,16 +89,16 @@ class MainActivity: AppCompatActivity() {
             }
         }
 
-        val commandActionDataObserver  = Observer<CommandActionState> {
-            when(it){
+        val commandActionDataObserver = Observer<CommandActionState> {
+            when (it) {
                 is CommandActionState.Success -> {
                     startActivity(it.intent)
                     textView.text = getString(R.string.please_push_number)
                 }
                 is CommandActionState.Failed -> errorViewBefore(it.failedState)
                 is CommandActionState.Road -> loadData()
-                is CommandActionState.OssLicense -> startActivity(Intent(this,OssLicensesMenuActivity::class.java))
-                is CommandActionState.AppViewIntent -> startActivity(Intent(this,AppViewActivity::class.java))
+                is CommandActionState.OssLicense -> startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+                is CommandActionState.AppViewIntent -> startActivity(Intent(this, AppViewActivity::class.java))
                 is CommandActionState.None -> return@Observer
             }
         }
@@ -107,15 +107,15 @@ class MainActivity: AppCompatActivity() {
     }
 
     // error::before
-    private fun errorViewBefore(errorString: String){
+    private fun errorViewBefore(errorString: String) {
         textView.text = errorString
         textView.setTextColor(Color.RED)
         errorViewAfter()
     }
 
     // error::after
-    private fun errorViewAfter(){
-        coroutineScope.launch(Dispatchers.Main){
+    private fun errorViewAfter() {
+        coroutineScope.launch(Dispatchers.Main) {
             delay(500)
             textView.setTextColor(getColor(R.color.fullactivityText))
             textView.text = getString(R.string.please_push_number)
@@ -123,14 +123,14 @@ class MainActivity: AppCompatActivity() {
     }
 
     // textViewの更新パターン
-    private fun checkText(text: String){
-        Log.d(TAG,textView.text.toString().length.toString())
-        if(text == "clear"){
-            if(textView.text.length <= 3)
+    private fun checkText(text: String) {
+        Log.d(TAG, textView.text.toString().length.toString())
+        if (text == "clear") {
+            if (textView.text.length <= 3)
                 textView.text = getString(R.string.please_push_number)
-        }else{
+        } else {
             val textStatus = textView.text.toString()
-            when{
+            when {
                 textStatus.length < 3 -> textView.text = textStatus.plus(text)
                 textStatus == getString(R.string.please_push_number) -> textView.text = text
                 textStatus.length == 3 -> commandExec(textStatus.plus(text))
@@ -140,16 +140,16 @@ class MainActivity: AppCompatActivity() {
     }
 
     // commandの実行
-    private fun commandExec(command: String){
+    private fun commandExec(command: String) {
         textView.text = command
-        if(store.appListActionData.value is AppListActionState.Success)
+        if (store.appListActionData.value is AppListActionState.Success)
             commandActionCreator.execute(
                     command,
                     (store.appListActionData.value as AppListActionState.Success).appList
             )
     }
 
-    companion object{
+    companion object {
         const val TAG = "MainActivity"
     }
 }
