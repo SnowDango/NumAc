@@ -213,19 +213,4 @@ class VisibleAppViewFragment: Fragment(), DataObserver {
     fun deletePackagePermissionDenied(){
         Toast.makeText(activity?.applicationContext, """Can not delete | Need Permission """.trimMargin(), Toast.LENGTH_LONG).show()
     }
-
-    override fun onDetach() {
-        Log.d("view model error", "detach")
-        super.onDetach()
-    }
-
-    override fun onDestroyView() {
-        Log.d("view model error", "destroy view")
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Log.d("view model error", "destroy")
-        super.onDestroy()
-    }
 }
